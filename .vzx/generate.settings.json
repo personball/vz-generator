@@ -1,0 +1,18 @@
+﻿[
+  {
+    "option": "Create Pinia",
+    "templateSyntax": "Liquid",
+    "templatePath": "./.vzx/templates/samples/pinia/{{store}}.js",
+    "variables": [
+      {
+        "name": "store",
+        "type": "String"
+      },
+      {
+        "name": "model",
+        "type": "String"
+      }
+    ],
+    "output": "./src/pinia/modules/{{store|camelCase}}.js"
+  }
+]

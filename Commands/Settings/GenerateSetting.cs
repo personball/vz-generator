@@ -5,17 +5,13 @@ namespace vz_generator.Commands.Settings
 {
     public class GenerateSetting
     {
-        [JsonPropertyName("$schema")]
-        [JsonPropertyOrder(-1)]
-        [JsonExclude]
-        public static string Schema = VzConsts.GenerateCmd.SettingSchemaFileName;
-        
         /// <summary>
         /// Unique option name for follow settings 
         /// argument.0(可选，没有则输出select提示，由用户选择；若包含空格，输入时需要用引号)
         /// </summary>
         /// <value></value>
         [Required]
+        [Description("Unique option name for CLI select, or used as generate argument")]
         public string Option { get; set; }
 
         /// <summary>
@@ -25,6 +21,7 @@ namespace vz_generator.Commands.Settings
         ///     --template-syntax Razor
         /// </summary>
         /// <value></value>
+        [Description("Liquid or Razor according to your preferred template syntax.")]
         public TemplateSyntax TemplateSyntax { get; set; } = TemplateSyntax.Liquid;
 
         /// <summary>
@@ -35,6 +32,7 @@ namespace vz_generator.Commands.Settings
         /// </summary>
         /// <value></value>
         [Required]
+        [Description("Path for single template file or multi templates folder.")]
         public string TemplatePath { get; set; }
 
         /// <summary>
@@ -44,6 +42,7 @@ namespace vz_generator.Commands.Settings
         ///     --var-json-file name=./xxx/filename.json 
         /// </summary>
         /// <value></value>
+        [Description("Variables declarations, can use cli option --var-string a=b or --var-json-file a=./xxx/1.json to override value.")]
         public List<TemplateVariable> Variables { get; set; } = new List<TemplateVariable>();
 
         /// <summary>
@@ -57,12 +56,14 @@ namespace vz_generator.Commands.Settings
         ///     3.2 如果输出为一个目录（以/结尾），则输出到指定目录，且允许以对应语法进行目录名的变量替换，同时按模板文件的文件名进行转换输出，允许以对应的语法对文件名进行变量名替换；
         /// </summary>
         /// <value></value>
+        [Description("Path for output.")]
         public string Output { get; set; } = "./output";
 
         /// <summary>
         /// 加载自定义函数、指令
         /// </summary>
         /// <value></value>
+        // [Description("Import custom functions or directives.")]
         // public string Imports { get; set; }
     }
 }

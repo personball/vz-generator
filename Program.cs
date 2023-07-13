@@ -1,8 +1,10 @@
 ﻿using System.CommandLine;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using Json.Schema;
 using Json.Schema.Generation;
+using Sharprompt;
 using vz_generator;
 using vz_generator.Commands.Settings;
 
@@ -54,7 +56,7 @@ class Program
         if (!File.Exists(generate_schema_path))
         {
             var schema = new JsonSchemaBuilder()
-                .FromType<GenerateSetting>(
+                .FromType<List<GenerateSetting>>(
                     new SchemaGeneratorConfiguration
                     {
                         PropertyNamingMethod = PropertyNamingMethods.CamelCase
@@ -82,29 +84,109 @@ class Program
                 Option = "Create Pinia",
                 TemplatePath = Path.Combine(
                     ".",
-                    ".vz",
-                    "templates",
+                    VzConsts.ConfigRoot,
+                    VzConsts.TemplateRoot,
                     "samples",
                     "pinia",
-                    "{{store}}.json"
+                    "{{store}}.js"
                 ),
                 Output = Path.Combine(
-                    Environment.CurrentDirectory,
+                    ".",
                     "src",
                     "pinia",
                     "modules",
                     "{{store|camelCase}}.js")
             };
 
+            setting.Variables.Add(new TemplateVariable { Name = "store", Type = TemplateVariableType.String });
+            setting.Variables.Add(new TemplateVariable { Name = "model", Type = TemplateVariableType.String });
+
             await File.WriteAllTextAsync(
                 generate_setting_path,
                 JsonSerializer.Serialize(
-                    new List<GenerateSetting>{setting},
+                    new List<GenerateSetting> { setting },
                     new JsonSerializerOptions(JsonSerializerDefaults.Web)
                     {
-                        WriteIndented = true
+                        WriteIndented = true,
+                        DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull | JsonIgnoreCondition.WhenWritingDefault
                     }),
                 Encoding.UTF8);
+        }
+
+        // ./.vz/templates/samples/
+        var sample_root = Path.Combine(configRoot, "templates", "samples");
+        if (!Directory.Exists(sample_root))
+        {
+            Directory.CreateDirectory(sample_root);
+        }
+        // ./.vz/templates/samples/pinia/{{store}}.js
+        var sample_store_js = Path.Combine(sample_root, "pinia");
+        if (!Directory.Exists(sample_store_js))
+        {
+            Directory.CreateDirectory(sample_store_js);
+        }
+
+        sample_store_js = Path.Combine(sample_store_js, "{{store}}.js");
+        if (!File.Exists(sample_store_js))
+        {
+            var sample_store_js_content = """
+import { defineStore } from 'pinia'
+import { get{{model}} } from '@/api/{{store}}(camelCase)'
+
+export const use{{store}} = defineStore('{{store}}(camelCase)', {
+    state: () => ({
+      {{model}}(camelCase): null
+    }),
+    actions: {
+      clear{{model}}() {
+        this.{{model}}(camelCase) = null
+      },
+      
+      async get{{model}}() {
+        const res = await get{{model}}()
+        if (res) {
+          this.{{model}}(camelCase) = res
+        } 
+        // else {
+        //   this.{{model}}(camelCase) = { name: 'SomeThingName' }
+        // }
+      },
+    },
+  })
+""";
+            await File.WriteAllTextAsync(sample_store_js, sample_store_js_content, Encoding.UTF8);
+        }
+
+        // .vscode
+        var vscode_config_root = Path.Combine(Environment.CurrentDirectory, ".vscode");
+        if (!Directory.Exists(vscode_config_root))
+        {
+            Directory.CreateDirectory(vscode_config_root);
+        }
+        // .vscode/settings.json 存在就不改，提示用户自己编辑
+        var vscode_settings_json = Path.Combine(vscode_config_root, "settings.json");
+        var vscode_json_schema_rule = """
+{
+    "json.schemas":[
+        {
+            "fileMatch": [
+                ".vz/generate.settings.json"
+            ],
+            "url": "./.vz/generate.settings.schema.json"
+        }
+    ]
+}
+""";
+        if (!File.Exists(vscode_settings_json))
+        {
+            await File.WriteAllTextAsync(vscode_settings_json, vscode_json_schema_rule);
+        }
+        else
+        {
+            Console.WriteLine($"Please edit .vscode{Path.DirectorySeparatorChar}settings.json with follow content:");
+            Console.Write(vscode_json_schema_rule);
+            Console.WriteLine();
+            //  Prompt.Select();
         }
 
     }

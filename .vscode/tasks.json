@@ -11,6 +11,7 @@
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
+            "dependsOn":["clean .vzx"],
             "problemMatcher": "$msCompile"
         },
         {
@@ -36,6 +37,11 @@
                 "${workspaceFolder}/vz-generator.csproj"
             ],
             "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "clean .vzx",
+            "type": "shell",
+            "command": "rm -rf .vzx"
         }
     ]
 }
