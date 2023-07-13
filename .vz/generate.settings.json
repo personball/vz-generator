@@ -1,0 +1,16 @@
+[
+    {
+        "$schema":"./generate.settings.schema.json",
+        "option": "Create Pinia",
+        "templateSyntax":"Liquid|Razor",
+        "defaultCase": "(pascalCase)",
+        "entry": {
+            "folderPath": "./tools/templates/samples/pinia/{{store}}.js",
+        },
+        "inputVars": ["store", "model"],
+        "output": {
+            "path": "./src/pinia/modules/{{store|camelCase}}.js",
+            "pathAndFileNameDefaultCase": "(camelCase)"
+        }
+    }
+]
