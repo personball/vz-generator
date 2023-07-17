@@ -9,21 +9,17 @@ public class TemplateVariable
     /// </summary>
     /// <value></value>
     [Required]
-    // [Description("Variable Name")]
     public string Name { get; set; }
 
     /// <summary>
     /// String 类型直接输入；JsonFile 需要指定文件路径
     /// </summary>
     /// <value></value>
-    // [Description("Variable type, default is String")]
     public TemplateVariableType Type { get; set; } = TemplateVariableType.String;
 
     /// <summary>
-    /// FileInfo? 
+    /// 默认值
     /// </summary>
     /// <value></value>
-    // [Description("Set filePath when type equals JsonFile")]
-    public string? FilePath { get; set; }
-
+    public string? DefaultValue { get; set; }
 }

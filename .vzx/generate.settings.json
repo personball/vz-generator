@@ -2,7 +2,7 @@
   {
     "option": "Create Pinia",
     "templateSyntax": "Liquid",
-    "templatePath": "./.vzx/templates/samples/pinia/{{store}}.js",
+    "templatePath": "./.vzx/templates/samples/vue.pinia/{{store}}.js",
     "variables": [
       {
         "name": "store",
@@ -14,5 +14,21 @@
       }
     ],
     "output": "./src/pinia/modules/{{store|camelCase}}.js"
+  },
+  {
+    "option": "Create Abp",
+    "templateSyntax": "Liquid",
+    "templatePath": "./.vzx/templates/samples/abp",
+    "variables": [
+      {
+        "name": "project",
+        "type": "String"
+      },
+      {
+        "name": "entity",
+        "type": "String"
+      }
+    ],
+    "output": "./src"
   }
 ]

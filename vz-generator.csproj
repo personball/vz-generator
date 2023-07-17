@@ -10,8 +10,17 @@
 
   <ItemGroup>
     <PackageReference Include="JsonSchema.Net.Generation" Version="3.3.0" />
+    <PackageReference Include="Pluralize.NET.Core" Version="1.0.0" />
+    <PackageReference Include="Scriban" Version="5.7.0" />
     <PackageReference Include="Sharprompt" Version="2.4.5" />
     <PackageReference Include="System.CommandLine" Version="2.0.0-beta4.22272.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Remove="Initializer\Samples\**\*.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Initializer\Samples\**\*.cs" />
+    <EmbeddedResource Include="Initializer\Samples\**\*.js" />
+  </ItemGroup>
 </Project>

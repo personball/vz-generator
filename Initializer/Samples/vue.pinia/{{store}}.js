@@ -3,22 +3,21 @@ import { get{{model}} } from '@/api/{{store}}(camelCase)'
 
 export const use{{store}} = defineStore('{{store}}(camelCase)', {
     state: () => ({
-      {{model}}(camelCase): null
+        {{model}}(camelCase): null
     }),
     actions: {
-      clear{{model}}() {
+        clear{{model}}() {
         this.{{model}}(camelCase) = null
-      },
-      // 获取用户信息
-      async get{{model}}() {
+        },
+
+        async get{{model}}() {
         const res = await get{{model}}()
         if (res) {
-          this.{{model}}(camelCase) = res
+            this.{{model}}(camelCase) = res
         } 
         // else {
-        //   this.{{model}}(camelCase) = { name: '优盾数字' }
+        //   this.{{model}}(camelCase) = { name: 'SomeThingName' }
         // }
-      },
+        },
     },
-  })
-  
+})

@@ -1,200 +1,24 @@
 ﻿using System.CommandLine;
-using System.Text;
-using System.Text.Json;
-using System.Text.Json.Serialization;
-using Json.Schema;
-using Json.Schema.Generation;
-using Sharprompt;
-using vz_generator;
-using vz_generator.Commands.Settings;
+using vz_generator.Commands;
+using vz_generator.Initializer;
 
 class Program
 {
     static async Task<int> Main(string[] args)
     {
-        // var fileOption = new Option<FileInfo?>(
-        //     name: "--file",
-        //     description: "The file to read and display on the console.");
+        var rootCommand = new RootCommand("VZeroSoft CLI Tools");
 
-        await InitAsync();
+        var initCommand = new InitCommand();
+        // initCommand.SetOptions();
+        initCommand.SetHandler(async (ctx) => await initCommand.InitAsync(ctx));
+        rootCommand.AddCommand(initCommand);
 
-        var rootCommand = new RootCommand("CLI Tools for VZeroSoft");
-        // rootCommand.AddOption(fileOption);
-
-        rootCommand.SetHandler(async (ctx) =>
-        {
-            var executablePath = Environment.GetCommandLineArgs()[0];
-            var currentPath = Environment.CurrentDirectory;
-
-            ctx.Console.WriteLine($"{nameof(executablePath)}:{executablePath}");
-            ctx.Console.WriteLine($"{nameof(currentPath)}:{currentPath}");
-
-            // read file in config
-
-
-
-            // var file = ctx.ParseResult.GetValueForOption(fileOption);
-            // var token = ctx.GetCancellationToken();
-
-            //ReadFile(file!); 
-        });
+        var generateCommand = new GenerateCommand();
+        generateCommand.AddAlias("g");
+        generateCommand.SetHandler(async (ctx) => await generateCommand.GenerateAsync(ctx));
+        rootCommand.AddCommand(generateCommand);
 
         return await rootCommand.InvokeAsync(args);
-    }
-
-    private static async Task InitAsync()
-    {
-        // ./.vz/
-        var configRoot = Path.Combine(Environment.CurrentDirectory, VzConsts.ConfigRoot);
-        if (!Directory.Exists(configRoot))
-        {
-            Directory.CreateDirectory(configRoot);
-        }
-
-        // ./.vz/generate.settings.schema.json
-        var generate_schema_path = Path.Combine(configRoot, VzConsts.GenerateCmd.SettingSchemaFileName);
-        if (!File.Exists(generate_schema_path))
-        {
-            var schema = new JsonSchemaBuilder()
-                .FromType<List<GenerateSetting>>(
-                    new SchemaGeneratorConfiguration
-                    {
-                        PropertyNamingMethod = PropertyNamingMethods.CamelCase
-                    })
-                .Build();
-
-            await File.WriteAllTextAsync(
-                generate_schema_path,
-                JsonSerializer.Serialize(
-                    schema,
-                    new JsonSerializerOptions(JsonSerializerDefaults.Web)
-                    {
-                        WriteIndented = true
-                    }),
-                Encoding.UTF8);
-        }
-
-        // ./.vz/generate.settings.json
-        var generate_setting_path = Path.Combine(configRoot, VzConsts.GenerateCmd.SettingFileName);
-        if (!File.Exists(generate_setting_path))
-        {
-            // sample settings
-            var setting = new GenerateSetting
-            {
-                Option = "Create Pinia",
-                TemplatePath = Path.Combine(
-                    ".",
-                    VzConsts.ConfigRoot,
-                    VzConsts.TemplateRoot,
-                    "samples",
-                    "pinia",
-                    "{{store}}.js"
-                ),
-                Output = Path.Combine(
-                    ".",
-                    "src",
-                    "pinia",
-                    "modules",
-                    "{{store|camelCase}}.js")
-            };
-
-            setting.Variables.Add(new TemplateVariable { Name = "store", Type = TemplateVariableType.String });
-            setting.Variables.Add(new TemplateVariable { Name = "model", Type = TemplateVariableType.String });
-
-            await File.WriteAllTextAsync(
-                generate_setting_path,
-                JsonSerializer.Serialize(
-                    new List<GenerateSetting> { setting },
-                    new JsonSerializerOptions(JsonSerializerDefaults.Web)
-                    {
-                        WriteIndented = true,
-                        DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull | JsonIgnoreCondition.WhenWritingDefault
-                    }),
-                Encoding.UTF8);
-        }
-
-        // ./.vz/templates/samples/
-        var sample_root = Path.Combine(configRoot, "templates", "samples");
-        if (!Directory.Exists(sample_root))
-        {
-            Directory.CreateDirectory(sample_root);
-        }
-        // ./.vz/templates/samples/pinia/{{store}}.js
-        var sample_store_js = Path.Combine(sample_root, "pinia");
-        if (!Directory.Exists(sample_store_js))
-        {
-            Directory.CreateDirectory(sample_store_js);
-        }
-
-        sample_store_js = Path.Combine(sample_store_js, "{{store}}.js");
-        if (!File.Exists(sample_store_js))
-        {
-            var sample_store_js_content = """
-import { defineStore } from 'pinia'
-import { get{{model}} } from '@/api/{{store}}(camelCase)'
-
-export const use{{store}} = defineStore('{{store}}(camelCase)', {
-    state: () => ({
-      {{model}}(camelCase): null
-    }),
-    actions: {
-      clear{{model}}() {
-        this.{{model}}(camelCase) = null
-      },
-      
-      async get{{model}}() {
-        const res = await get{{model}}()
-        if (res) {
-          this.{{model}}(camelCase) = res
-        } 
-        // else {
-        //   this.{{model}}(camelCase) = { name: 'SomeThingName' }
-        // }
-      },
-    },
-  })
-""";
-            await File.WriteAllTextAsync(sample_store_js, sample_store_js_content, Encoding.UTF8);
-        }
-
-        // .vscode
-        var vscode_config_root = Path.Combine(Environment.CurrentDirectory, ".vscode");
-        if (!Directory.Exists(vscode_config_root))
-        {
-            Directory.CreateDirectory(vscode_config_root);
-        }
-        // .vscode/settings.json 存在就不改，提示用户自己编辑
-        var vscode_settings_json = Path.Combine(vscode_config_root, "settings.json");
-        var vscode_json_schema_rule = """
-{
-    "json.schemas":[
-        {
-            "fileMatch": [
-                ".vz/generate.settings.json"
-            ],
-            "url": "./.vz/generate.settings.schema.json"
-        }
-    ]
-}
-""";
-        if (!File.Exists(vscode_settings_json))
-        {
-            await File.WriteAllTextAsync(vscode_settings_json, vscode_json_schema_rule);
-        }
-        else
-        {
-            Console.WriteLine($"Please edit .vscode{Path.DirectorySeparatorChar}settings.json with follow content:");
-            Console.Write(vscode_json_schema_rule);
-            Console.WriteLine();
-            //  Prompt.Select();
-        }
-
-    }
-
-    static void ReadFile(FileInfo file)
-    {
-        File.ReadLines(file.FullName).ToList()
-            .ForEach(line => Console.WriteLine(line));
     }
 }
 // 2 subCommands
@@ -219,3 +43,4 @@ export const use{{store}} = defineStore('{{store}}(camelCase)', {
 // c. 模板引擎可以切换，以支持不同的模板语法
 // d. 兼容 __name__(camelCase) 语法，预处理为 {{ name | camelCase}}
 // e. 自定义指令 directive
+// 命名规范的处理 & 单词复数

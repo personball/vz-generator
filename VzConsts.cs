@@ -10,11 +10,19 @@ public static class VzConsts
 
     public const string TemplateRoot = "templates";
 
+    public const string SampleRoot = "samples";
+
     public static class GenerateCmd
     {
-        public const string CmdName = "generate";
-        public const string SettingFileName = CmdName + ".settings.json";
-        public const string SettingSchemaFileName = CmdName + ".settings.schema.json";
+        public const string Name = "generate";
+        public const string SettingFileName = Name + ".settings.json";
+        public const string SettingSchemaFileName = Name + ".settings.schema.json";
+    }
 
+    public static class InitCmd
+    {
+        public const string Name = "init";
+
+        public const string EmbeddedSamples = "vz_generator.Initializer.Samples";
     }
 }

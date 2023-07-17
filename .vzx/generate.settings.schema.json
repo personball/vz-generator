@@ -32,7 +32,7 @@
                 "JsonFile"
               ]
             },
-            "filePath": {
+            "defaultValue": {
               "type": "string"
             }
           },
