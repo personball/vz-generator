@@ -7,7 +7,7 @@ public class VzStringUtils : ScriptObject
 {
     /// <summary>
     /// ```
-    /// {{'nameIt'|pascalCase}} 
+    /// {{'nameIt'|pascal_case}} 
     /// ```
     /// ```
     /// NameIt
@@ -22,7 +22,7 @@ public class VzStringUtils : ScriptObject
 
     /// <summary>
     /// ```
-    /// {{‘NameIt’|camelCase}}
+    /// {{'NameIt'|camel_case}}
     /// ```
     /// ```
     /// nameIt
@@ -37,7 +37,7 @@ public class VzStringUtils : ScriptObject
 
     /// <summary>
     /// ```
-    /// {{‘NameIt’|kebabCase}}
+    /// {{'NameIt'|kebab_case}}
     /// ```
     /// ```
     /// name-it
@@ -52,7 +52,7 @@ public class VzStringUtils : ScriptObject
 
     /// <summary>
     /// ```
-    /// {{‘NameIt’|snakeCase}}
+    /// {{'NameIt'|snake_case}}
     /// ```
     /// ```
     /// name_it

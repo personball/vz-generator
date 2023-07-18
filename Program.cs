@@ -44,3 +44,4 @@ class Program
 // d. 兼容 __name__(camelCase) 语法，预处理为 {{ name | camelCase}}
 // e. 自定义指令 directive
 // 命名规范的处理 & 单词复数
+// TODO: 所有输出信息的本地化

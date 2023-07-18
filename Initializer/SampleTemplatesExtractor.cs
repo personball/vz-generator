@@ -5,7 +5,7 @@ namespace vz_generator.Initializer
 {
     public static class SampleTemplatesExtractor
     {
-        // zip files to keep directories
+        // zip files to keep directory constructure
         // see build task "zip samples" in .vscode/tasks.json
         public const string SamplesResourceName = "vz_generator.Initializer.samples.zip";
         public const string ZipEntryPrefix = "Initializer/Samples/";

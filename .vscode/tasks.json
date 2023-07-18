@@ -12,8 +12,8 @@
                 "/consoleloggerparameters:NoSummary"
             ],
             "dependsOn": [
-                "clean .vzx",
-                "zip samples"
+                // "clean .vzx",
+                // "zip samples"
             ],
             "problemMatcher": "$msCompile"
         },

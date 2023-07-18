@@ -11,10 +11,11 @@
             "preLaunchTask": "build",
             // If you have changed target frameworks, make sure to update the program path.
             "program": "${workspaceFolder}/bin/Debug/net7.0/vz-generator.dll",
-            "args": ["init","--with-sample","vue.pinia","--with-sample","abp"],
+            "args": ["g","-c",".vzx/generate.settings.json"],
             "cwd": "${workspaceFolder}",
             // For more information about the 'console' field, see https://aka.ms/VSCode-CS-LaunchJson-Console
-            "console": "internalConsole",
+            "console": "integratedTerminal",//"internalConsole",
+            "internalConsoleOptions": "neverOpen",
             "stopAtEntry": false
         },
         {

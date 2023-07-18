@@ -75,9 +75,9 @@ public sealed class InitCommand : Command
         // ./.vz/templates/samples/
         var sample_root = CreateDirectoryIfNotExists(templatesRoot, VzConsts.SampleRoot);
         // export sample templates
-        await SampleTemplatesExtractor.ExportAsync(sample_root,examples.Select(e=>e.Name).ToArray());
-        
-        // TODO: 创建 generate.settings.json
+        await SampleTemplatesExtractor.ExportAsync(sample_root, examples.Select(e => e.Name).ToArray());
+
+        // 创建 generate.settings.json
         var generate_setting_path = Path.Combine(vzRoot, VzConsts.GenerateCmd.SettingFileName);
         var sampleSettings = new List<GeneratorSetting>();
         if (File.Exists(generate_setting_path))
@@ -85,7 +85,8 @@ public sealed class InitCommand : Command
             try
             {
                 sampleSettings = JsonSerializer.Deserialize<List<GeneratorSetting>>(
-                                await File.ReadAllTextAsync(generate_setting_path));
+                                await File.ReadAllTextAsync(generate_setting_path),
+                                new JsonSerializerOptions(JsonSerializerDefaults.Web));
             }
             catch (JsonException ex)
             {
@@ -121,45 +122,6 @@ public sealed class InitCommand : Command
                     DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull | JsonIgnoreCondition.WhenWritingDefault
                 }),
             Encoding.UTF8);
-        //         // ./.vz/templates/samples/pinia/{{store}}.js
-        //         var sample_store_js = Path.Combine(sample_root, "pinia");
-        //         if (!Directory.Exists(sample_store_js))
-        //         {
-        //             Directory.CreateDirectory(sample_store_js);
-        //         }
-
-        //         sample_store_js = Path.Combine(sample_store_js, "{{store}}.js");
-        //         if (!File.Exists(sample_store_js))
-        //         {
-        //             var sample_store_js_content = """
-        // import { defineStore } from 'pinia'
-        // import { get{{model}} } from '@/api/{{store}}(camelCase)'
-
-        // export const use{{store}} = defineStore('{{store}}(camelCase)', {
-        //     state: () => ({
-        //       {{model}}(camelCase): null
-        //     }),
-        //     actions: {
-        //       clear{{model}}() {
-        //         this.{{model}}(camelCase) = null
-        //       },
-
-        //       async get{{model}}() {
-        //         const res = await get{{model}}()
-        //         if (res) {
-        //           this.{{model}}(camelCase) = res
-        //         } 
-        //         // else {
-        //         //   this.{{model}}(camelCase) = { name: 'SomeThingName' }
-        //         // }
-        //       },
-        //     },
-        //   })
-        // """;
-        //             await File.WriteAllTextAsync(sample_store_js, sample_store_js_content, Encoding.UTF8);
-        //}
-
-
     }
 
     private string CreateDirectoryIfNotExists(params string[] paths)

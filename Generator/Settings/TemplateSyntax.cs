@@ -6,5 +6,5 @@ namespace vz_generator.Commands.Settings;
 public enum TemplateSyntax
 {
     Liquid = 0,
-    Razor = 1
+    // Razor = 1
 }

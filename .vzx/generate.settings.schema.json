@@ -9,8 +9,7 @@
       },
       "templateSyntax": {
         "enum": [
-          "Liquid",
-          "Razor"
+          "Liquid"
         ],
         "description": "Liquid or Razor according to your preferred template syntax."
       },

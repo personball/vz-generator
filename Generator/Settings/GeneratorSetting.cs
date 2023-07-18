@@ -56,7 +56,7 @@ public class GeneratorSetting
     /// </summary>
     /// <value></value>
     [Description("Path for output.")]
-    public string Output { get; set; } = "./output";
+    public string Output { get; set; }
 
     /// <summary>
     /// 加载自定义函数、指令
@@ -65,18 +65,3 @@ public class GeneratorSetting
     // [Description("Import custom functions or directives.")]
     // public string Imports { get; set; }
 }
-/*
-{
-        "option": "Create Pinia",
-        "templateSyntax":"Liquid|Razor",
-        "defaultCase": "(pascalCase)",
-        "entry": {
-            "folderPath": "./tools/templates/samples/pinia/{{store}}.js",
-        },
-        "inputVars": ["store", "model"],
-        "output": {
-            "path": "./src/pinia/modules/{{store|camelCase}}.js",
-            "pathAndFileNameDefaultCase": "(camelCase)"
-        }
-    }
-*/
