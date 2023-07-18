@@ -6,6 +6,10 @@
     <RootNamespace>vz_generator</RootNamespace>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    
+    <PackAsTool>true</PackAsTool>
+    <ToolCommandName>vz</ToolCommandName>
+    <PackageOutputPath>./nupkg</PackageOutputPath>
   </PropertyGroup>
 
   <ItemGroup>
