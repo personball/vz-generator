@@ -5,6 +5,6 @@ namespace vz_generator.Initializer;
 public class Example
 {
     public string Name { get; set; }
-
+    
     public GeneratorSetting Setting { get; set; }
 }

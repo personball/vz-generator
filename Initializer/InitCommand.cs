@@ -74,13 +74,9 @@ public sealed class InitCommand : Command
         }
         // ./.vz/templates/samples/
         var sample_root = CreateDirectoryIfNotExists(templatesRoot, VzConsts.SampleRoot);
-        // TODO: export sample templates
-        foreach (var item in examples)
-        {
-            // todo CreateIfNotExists
-            context.Console.Out.Write($"TODO:export {item.Name} sample templates from assembly...");
-        }
-
+        // export sample templates
+        await SampleTemplatesExtractor.ExportAsync(sample_root,examples.Select(e=>e.Name).ToArray());
+        
         // TODO: 创建 generate.settings.json
         var generate_setting_path = Path.Combine(vzRoot, VzConsts.GenerateCmd.SettingFileName);
         var sampleSettings = new List<GeneratorSetting>();
@@ -175,49 +171,4 @@ public sealed class InitCommand : Command
         }
         return path;
     }
-
-
-    public static async Task InitSampleSettingsAsync(string configRoot)
-    {
-        // ./.vz/generate.settings.json
-        var generate_setting_path = Path.Combine(configRoot, VzConsts.GenerateCmd.SettingFileName);
-        if (!File.Exists(generate_setting_path))
-        {
-            // sample settings
-            var setting = new GeneratorSetting
-            {
-                Option = "Create Pinia",
-                TemplatePath = Path.Combine(
-                    ".",
-                    VzConsts.ConfigRoot,
-                    VzConsts.TemplateRoot,
-                    VzConsts.SampleRoot,
-                    "pinia",
-                    "{{store}}.js"
-                ),
-                Output = Path.Combine(
-                    ".",
-                    "src",
-                    "pinia",
-                    "modules",
-                    "{{store|camelCase}}.js")
-            };
-
-            setting.Variables.Add(new TemplateVariable { Name = "store", Type = TemplateVariableType.String });
-            setting.Variables.Add(new TemplateVariable { Name = "model", Type = TemplateVariableType.String });
-
-            await File.WriteAllTextAsync(
-                generate_setting_path,
-                JsonSerializer.Serialize(
-                    new List<GeneratorSetting> { setting },
-                    new JsonSerializerOptions(JsonSerializerDefaults.Web)
-                    {
-                        WriteIndented = true,
-                        DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull | JsonIgnoreCondition.WhenWritingDefault
-                    }),
-                Encoding.UTF8);
-        }
-    }
-
-
 }

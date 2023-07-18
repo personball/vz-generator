@@ -11,7 +11,10 @@
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
-            "dependsOn":["clean .vzx"],
+            "dependsOn": [
+                "clean .vzx",
+                "zip samples"
+            ],
             "problemMatcher": "$msCompile"
         },
         {
@@ -42,6 +45,11 @@
             "label": "clean .vzx",
             "type": "shell",
             "command": "rm -rf .vzx"
+        },
+        {
+            "label": "zip samples",
+            "type": "shell",
+            "command": "zip -q -r Initializer/samples.zip Initializer/Samples"
         }
     ]
 }

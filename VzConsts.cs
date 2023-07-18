@@ -22,7 +22,5 @@ public static class VzConsts
     public static class InitCmd
     {
         public const string Name = "init";
-
-        public const string EmbeddedSamples = "vz_generator.Initializer.Samples";
     }
 }
