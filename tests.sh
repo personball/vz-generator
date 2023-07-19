@@ -1,7 +1,7 @@
 # TODO: playwright
 
 # 从本地安装 vz
-
+dotnet tool install --global --add-source ./nupkg vz_generator
 # 执行用例
 
 # vz init 用例(基本配置、各个示例导出)

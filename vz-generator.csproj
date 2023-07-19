@@ -9,6 +9,7 @@
     
     <PackAsTool>true</PackAsTool>
     <ToolCommandName>vz</ToolCommandName>
+    <Version>0.0.1</Version>
     <PackageOutputPath>./nupkg</PackageOutputPath>
   </PropertyGroup>
 

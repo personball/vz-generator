@@ -57,10 +57,10 @@ public static class SettingSchemas
         }
         else
         {
-            context.Console.Out.Write(
-                $@"Please edit .vscode{Path.DirectorySeparatorChar}settings.json with content:
-                {vscode_json_schema_rule}
-                ");
+            context.Console.Out.Write($@"
+Please edit .vscode{Path.DirectorySeparatorChar}settings.json with content:
+{vscode_json_schema_rule}
+");
         }
     }
 }
