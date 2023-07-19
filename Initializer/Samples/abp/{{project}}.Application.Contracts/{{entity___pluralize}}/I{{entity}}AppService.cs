@@ -2,11 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using {{project}}.{{entity|string.pluralize}}.Dto;
+using {{project}}.{{entity|pluralize}}.Dto;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
 
-namespace {{project}}.{{entity|string.pluralize}}
+namespace {{project}}.{{entity|pluralize}}
 public interface I{{entity}}AppService: IApplicationService
 {
     Task CreateAsync(Create{{entity}}Dto input);

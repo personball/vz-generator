@@ -8,7 +8,7 @@ using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
 using Volo.Abp.Domain.Repositories;
 
-namespace {{project}}.{{entity|string.pluralize}};
+namespace {{project}}.{{entity|pluralize}};
 
 [Authorize]
 [RemoteService(IsEnabled = false)]
