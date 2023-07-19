@@ -1,3 +1,4 @@
+using System.CommandLine.Invocation;
 using System.Text;
 using System.Text.Json;
 using Json.Schema;
@@ -33,7 +34,7 @@ public static class SettingSchemas
                 Encoding.UTF8);
         }
     }
-    public static async Task SetupVsCodeAsync(string vscodePath)
+    public static async Task SetupVsCodeAsync(string vscodePath, InvocationContext context)
     {
         // .vscode/settings.json
         var vscode_settings_json = Path.Combine(vscodePath, VsCodeSettings.FileName);
@@ -56,9 +57,10 @@ public static class SettingSchemas
         }
         else
         {
-            Console.WriteLine($"Please edit .vscode{Path.DirectorySeparatorChar}settings.json with follow content:");
-            Console.Write(vscode_json_schema_rule);
-            Console.WriteLine();
+            context.Console.Out.Write(
+                $@"Please edit .vscode{Path.DirectorySeparatorChar}settings.json with content:
+                {vscode_json_schema_rule}
+                ");
         }
     }
 }

@@ -23,6 +23,7 @@
 
   <ItemGroup>
     <Compile Remove="Initializer\Samples\**\*" />
+    <Compile Remove="output\**\*" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Initializer\*.zip" />

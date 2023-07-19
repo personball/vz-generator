@@ -50,7 +50,7 @@ namespace vz_generator.Initializer
                                 entry.FullName.Replace(ZipEntryPrefix, string.Empty)
                                               .Replace(entry.Name, string.Empty)
                                               .Split('/', StringSplitOptions.RemoveEmptyEntries)));
-                        Console.WriteLine(subPath);
+                        // Console.WriteLine(subPath);
                         entry.ExtractToFile(Path.Combine(subPath, entry.Name), true);
                     }
                 }

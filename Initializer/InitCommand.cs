@@ -64,7 +64,7 @@ public sealed class InitCommand : Command
         await SettingSchemas.InitAsync(vzRoot);
         // 设置 .vscode/settings.json 添加 generate.settings.json 的json schemas 校验
         var vscodePath = CreateDirectoryIfNotExists(currentPath, VsCodeSettings.ConfigPath);
-        await SettingSchemas.SetupVsCodeAsync(vscodePath);
+        await SettingSchemas.SetupVsCodeAsync(vscodePath, context);
         // 按需导出 samples （导出模板到 templates samples 目录下，同时添加相应的示例 option 到 generate.settings.json）
         var withSamples = context.ParseResult.GetValueForOption(withSample);
         var examples = SamplesCollector.GetExamples();

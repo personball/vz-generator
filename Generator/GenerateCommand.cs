@@ -29,6 +29,7 @@ public sealed class GenerateCommand : Command
         yield return VarStringOpt;
         yield return VarJsonFileOpt;
         yield return OutputOpt;
+        yield return OverrideOpt;
     }
     public static Option<FileInfo> ConfigOpt = new Option<FileInfo>(
         aliases: new string[] { "--config", "-c" },
@@ -39,15 +40,21 @@ public sealed class GenerateCommand : Command
         description: "（可选）输出结果到指定位置。未指定则按配置文件执行，配置文件中未配置，则默认输出到./output。"
     );
 
+    public static Option<bool?> OverrideOpt = new Option<bool?>(
+        name: "--override",
+        description: "（可选）输出文件如果已存在，是否覆盖。true 全部覆盖；false 全部跳过；默认会逐个提示。",
+        getDefaultValue: () => (bool?)null
+    );
+
     public static Option<Dictionary<string, string>> VarStringOpt = new Option<Dictionary<string, string>>(
-        aliases: new string[] { "--vars" },
-        description: "（可选）指定变量键值, --vars key1=val1 key2=val2 可以覆盖配置文件中的默认配置，若未完全覆盖，则会有交互提示输入。",
+        aliases: new string[] { "--var" },
+        description: "（可选）指定变量键值, --var key1=val1 --var key2=val2 可以覆盖配置文件中的默认配置，若未完全覆盖，则会有交互提示输入。",
         parseArgument: result => result.Tokens.Select(t => t.Value.Split('=')).ToDictionary(p => p[0], p => p[1])
     );
 
     public static Option<Dictionary<string, FileInfo>> VarJsonFileOpt = new Option<Dictionary<string, FileInfo>>(
-        aliases: new string[] { "--var-json-files" },
-        description: "（可选）指定变量键值来自一个json文件， --var-json-files key1=./path/to/jsonfile key2=./path/to/jsonfile2 可以覆盖配置文件中的默认配置，若未完全覆盖，则会有交互提示输入。",
+        aliases: new string[] { "--var-json-file" },
+        description: "（可选）指定变量键值来自一个json文件， --var-json-file key1=./path/to/jsonfile --var-json-file key2=./path/to/jsonfile2 可以覆盖配置文件中的默认配置，若未完全覆盖，则会有交互提示输入。",
         parseArgument: result => result.Tokens.Select(t => t.Value.Split('=')).ToDictionary(p => p[0], p => new FileInfo(p[1]))
     );
 
@@ -78,9 +85,9 @@ public sealed class GenerateCommand : Command
         catch (System.Exception ex)
         {
 #if DEBUG
-            Console.WriteLine($"Generate Fail: {ex.Message}");
+            Console.WriteLine($"Generate Fail: {ex.Message} \n {ex.StackTrace}");
 #endif
-            context.Console.Error.Write($"Generate Fail: {ex.Message} \n");
+            context.Console.Error.Write($"Generate Fail: {ex.Message} \n {ex.StackTrace}");
             context.ExitCode = 2;
         }
     }

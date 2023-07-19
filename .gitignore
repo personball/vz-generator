@@ -477,5 +477,6 @@ $RECYCLE.BIN/
 *.lnk
 
 # vz 
-# .vz/
+.vz/
+.vzx/
 output/

@@ -29,6 +29,43 @@
         "type": "String"
       }
     ],
-    "output": "./src"
+    "output": "./output/"
+  },
+  {
+    "option": "Swagger2Api",
+    "templateSyntax": "Liquid",
+    "templatePath": "./.vzx/templates/samples/swagger2api",
+    "variables": [
+      {
+        "name": "name",
+        "type": "String"
+      },
+      {
+        "name": "module",
+        "type": "String"
+      }
+    ],
+    "output": "./src/apis/modules/{{name}}.js"
+  },
+  {
+    "option": "Swagger2View",
+    "templateSyntax": "Liquid",
+    "templatePath": "./.vzx/templates/samples/swagger2view",
+    "variables": [
+      {
+        "name": "name",
+        "type": "String"
+      },
+      {
+        "name": "module",
+        "type": "String"
+      },
+      {
+        "name": "swagger",
+        "type": "JsonFile",
+        "defaultValue": "./.vzx/templates/samples/swagger2view/swagger.json"
+      }
+    ],
+    "output": "./src/view/{{module}}/{{name}}.vue"
   }
 ]

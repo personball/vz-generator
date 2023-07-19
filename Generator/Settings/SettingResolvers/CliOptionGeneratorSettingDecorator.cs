@@ -33,7 +33,7 @@ namespace vz_generator.Generator.Settings.SettingResolvers
             // override by cli options
 
             // variables merge 同名覆盖，不存在则添加
-            var vars = context.InvocationContext.ParseResult.GetValueForOption(GenerateCommand.VarStringOpt);
+            var vars = context.InvocationContext.ParseResult.GetValueForOption(GenerateCommand.VarStringOpt) ?? new Dictionary<string, string>();
             foreach (var item in vars)
             {
                 var entry = context.Result.Variables.FirstOrDefault(v => v.Type == TemplateVariableType.String && v.Name == item.Key);
@@ -53,7 +53,7 @@ namespace vz_generator.Generator.Settings.SettingResolvers
                 }
             }
 
-            var jsons = context.InvocationContext.ParseResult.GetValueForOption(GenerateCommand.VarJsonFileOpt);
+            var jsons = context.InvocationContext.ParseResult.GetValueForOption(GenerateCommand.VarJsonFileOpt) ?? new Dictionary<string, FileInfo>();
             foreach (var item in jsons)
             {
                 var entry = context.Result.Variables.FirstOrDefault(v => v.Type == TemplateVariableType.JsonFile && v.Name == item.Key);

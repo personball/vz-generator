@@ -6,6 +6,8 @@ namespace vz_generator.Commands.Settings;
 public enum TemplateVariableType
 {
     String = 0,
-    
-    JsonFile = 1
+
+    JsonFile = 1,
+    // JsonFileUri = 2
 }
+// TODO: load json from uri
