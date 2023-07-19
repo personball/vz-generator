@@ -49,7 +49,7 @@ public sealed class InitCommand : Command
         {
             foreach (var item in SamplesCollector.GetExamples())
             {
-                context.Console.Out.Write($"{item.Name}\n");
+                context.Console.Out.Write($"{item.Name}{Environment.NewLine}");
             }
 
             return;
@@ -105,7 +105,7 @@ public sealed class InitCommand : Command
         {
             if (sampleSettings.Any(s => s.Option == item.Setting.Option))
             {
-                context.Console.Out.Write($"WARN: option <{item.Setting.Option}> from sample {item.Name} already exists, settings skipped...\n");
+                context.Console.Out.Write($"WARN: option <{item.Setting.Option}> from sample {item.Name} already exists, settings skipped...{Environment.NewLine}");
                 continue;
             }
 

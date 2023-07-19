@@ -85,9 +85,9 @@ public sealed class GenerateCommand : Command
         catch (System.Exception ex)
         {
 #if DEBUG
-            Console.WriteLine($"Generate Fail: {ex.Message} \n {ex.StackTrace}");
+            Console.WriteLine($"Generate Fail: {ex.Message}{Environment.NewLine}{ex.StackTrace}");
 #endif
-            context.Console.Error.Write($"Generate Fail: {ex.Message} \n {ex.StackTrace}");
+            context.Console.Error.Write($"Generate Fail: {ex.Message}{Environment.NewLine}{ex.StackTrace}");
             context.ExitCode = 2;
         }
     }

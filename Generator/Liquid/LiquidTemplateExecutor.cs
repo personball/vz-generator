@@ -83,7 +83,7 @@ public class LiquidTemplateExecutor
 
         if (!tplFiles.Any())
         {
-            _context.Console.Out.Write($"There is no template file, nothing happened.\n");
+            _context.Console.Out.Write($"There is no template file, nothing happened.{Environment.NewLine}");
             return;
         }
 
@@ -133,7 +133,6 @@ public class LiquidTemplateExecutor
                 else
                 {
                     doIt = fileOverride.Value;
-                    // Console.WriteLine($"{nameof(fileOverride)}:{fileOverride.Value}");
                 }
 
                 if (doIt)
