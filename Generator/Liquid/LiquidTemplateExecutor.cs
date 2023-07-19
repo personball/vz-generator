@@ -56,7 +56,7 @@ public class LiquidTemplateExecutor
             tplContext.PushGlobal(variableObj);
         }
 
-        // TODO: enumerate templates and paths
+        // enumerate templates and paths
         // config one tpl file to output file: Liquid <output path> and <output file name>
         // config one tpl file to output directory: Liquid <output path> and <tpl file name> 
         // config tpl directory (multi tpls) to output directory: Liquid <output path> and <tpl sub path> and <tpl file name>
@@ -88,14 +88,9 @@ public class LiquidTemplateExecutor
         }
 
         var outputRoot = _setting.Output.Replace("___", "|").RenderContent(tplContext);//exists or not, directory or file
-        var outputIsDirectory = false;
         var outputIsFile = false;
 
-        if (outputRoot.EndsWith(Path.DirectorySeparatorChar))
-        {
-            outputIsDirectory = true;
-        }
-        else
+        if (!outputRoot.EndsWith(Path.DirectorySeparatorChar))
         {
             outputIsFile = true;
         }
