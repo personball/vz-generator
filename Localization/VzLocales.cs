@@ -21,6 +21,19 @@ public static class VzLocales
         public const string VsCodeSettingsFileExistsPrompt = nameof(VsCodeSettingsFileExistsPrompt);
 
         // Generator
+        public const string GenerateCommandDesc = nameof(GenerateCommandDesc);
+        public const string GTemplateFileNotFoundPrompt = nameof(GTemplateFileNotFoundPrompt);
+        public const string GMultiTplOutputToSingleFileError = nameof(GMultiTplOutputToSingleFileError);
+        public const string GOutputFileExistsOverridePrompt = nameof(GOutputFileExistsOverridePrompt);
+
+        public const string GOptConfigOptDesc = nameof(GOptConfigOptDesc);
+        public const string GOptSelectOptDesc = nameof(GOptSelectOptDesc);
+        public const string GOptTplPathOptDesc = nameof(GOptTplPathOptDesc);
+        public const string GOptSyntaxOptDesc = nameof(GOptSyntaxOptDesc);
+        public const string GOptVarStringOptDesc = nameof(GOptVarStringOptDesc);
+        public const string GOptVarJsonFileOptDesc = nameof(GOptVarJsonFileOptDesc);
+        public const string GOptOutputOptDesc = nameof(GOptOutputOptDesc);
+        public const string GOptOverrideOptDesc = nameof(GOptOverrideOptDesc);
 
     }
 

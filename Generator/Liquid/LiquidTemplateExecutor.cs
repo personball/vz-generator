@@ -1,12 +1,16 @@
 using System.CommandLine.Invocation;
 using System.Dynamic;
 using System.Text.Json;
+
 using Scriban;
 using Scriban.Runtime;
+
 using Sharprompt;
+
 using vz_generator.Commands;
 using vz_generator.Commands.Settings;
 using vz_generator.Generator.Liquid.Scriban;
+using vz_generator.Localization;
 
 namespace vz_generator.Generator.Liquid;
 public class LiquidTemplateExecutor
@@ -83,7 +87,8 @@ public class LiquidTemplateExecutor
 
         if (!tplFiles.Any())
         {
-            _context.Console.Out.Write($"There is no template file, nothing happened.{Environment.NewLine}");
+            _context.Console.Out.Write(
+                VzLocales.L(VzLocales.Keys.GTemplateFileNotFoundPrompt));
             return;
         }
 
@@ -97,8 +102,13 @@ public class LiquidTemplateExecutor
 
         if (tplFiles.Count > 1 && outputIsFile)
         {
-            throw new ArgumentException(nameof(_setting.Output),
-                $"There are {tplFiles.Count} Template Files, but {outputRoot} is not end with '{Path.DirectorySeparatorChar}'.");
+            throw new ArgumentException(
+                nameof(_setting.Output),
+                VzLocales.L(
+                    VzLocales.Keys.GMultiTplOutputToSingleFileError,
+                    "" + tplFiles.Count,
+                    outputRoot,
+                    "" + Path.DirectorySeparatorChar));
         }
 
         foreach (var item in tplFiles)
@@ -128,7 +138,9 @@ public class LiquidTemplateExecutor
                 var doIt = false;
                 if (!fileOverride.HasValue)
                 {
-                    doIt = Prompt.Confirm($"{outputFilePath} is already exists, override it?", false);
+                    doIt = Prompt.Confirm(
+                        VzLocales.L(VzLocales.Keys.GOutputFileExistsOverridePrompt, outputFilePath),
+                        false);
                 }
                 else
                 {
@@ -177,14 +189,3 @@ public class LiquidTemplateExecutor
         }
     }
 }
-/*
-"""
-        author: {{json.name|string.upcase}}
-        NameIt == {{'nameIt'|pascal_case}}
-        nameIt == {{'NameIt'|camel_case}}
-        name-it == {{'NameIt'|kebab_case}}
-        name_it == {{'NameIt'|snake_case}}
-        people == {{'person'|pluralize}}
-        person == {{'people'|singularize}}
-        """
-*/

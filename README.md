@@ -38,6 +38,25 @@ TODO file to file
 TODO file to folder
 TODO folder to folder
 
+## Template Syntax
+
+The basic liquid syntax and builtin functions follow [Scriban](https://github.com/scriban/scriban/blob/master/doc/builtins.md#string-functions).
+
+**Notice**
+
+    As name of paths or files not allowed the char '|', so by convention, we use '___' instead of '|'.
+
+### Extended naming functions
+
+``` liquid
+ {{'nameIt'|pascal_case}} =>  NameIt 
+ {{'NameIt'|camel_case}}  =>  nameIt 
+ {{'NameIt'|kebab_case}}  =>  name-it 
+ {{'NameIt'|snake_case}}  =>  name_it 
+ {{'person'|pluralize}}   =>  people 
+ {{'people'|singularize}} =>  person 
+```
+
 ## Generate any files with subpaths as you want
 
     vz g

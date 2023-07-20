@@ -34,13 +34,32 @@
 
 ## Settings
 
-TODO syntax liquid help
 TODO path variable
 
 TODO tpl path to output path
 TODO file to file
 TODO file to folder
 TODO folder to folder
+
+## 模板语法
+
+基本的 liquid 语法和内置函数功能请查看 [Scriban](https://github.com/scriban/scriban/blob/master/doc/builtins.md#string-functions).
+
+**请注意**
+
+    由于文件名和路径名不允许出现'|', 故约定对于路径和文件名中需要'|'调用函数的地方，以三个下划线代替，即 '___' 会被替换为 '|'
+
+
+### 已扩展的命名相关函数
+
+``` liquid
+ {{'nameIt'|pascal_case}} =>  NameIt 
+ {{'NameIt'|camel_case}}  =>  nameIt 
+ {{'NameIt'|kebab_case}}  =>  name-it 
+ {{'NameIt'|snake_case}}  =>  name_it 
+ {{'person'|pluralize}}   =>  people 
+ {{'people'|singularize}} =>  person 
+```
 
 ## 按你所需模板化生成多个文件以及相应子目录结构
 
