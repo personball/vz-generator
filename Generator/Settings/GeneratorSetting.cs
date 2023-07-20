@@ -10,17 +10,17 @@ public class GeneratorSetting
     /// </summary>
     /// <value></value>
     [Required]
-    [Description("Unique option name for CLI select, or used as generate argument")]
+    [Description("Unique option name for CLI select.")]
     public string Option { get; set; }
 
     /// <summary>
     /// Liquid or Razor
     /// opt(仅可声明一次，指定模板语法):
-    ///     -t Razor
-    ///     --template-syntax Razor
+    ///     -s Razor
+    ///     --syntax Razor
     /// </summary>
     /// <value></value>
-    [Description("Liquid or Razor according to your preferred template syntax.")]
+    [Description("Liquid or Razor(not supported yet) according to your preferred template syntax.")]
     public TemplateSyntax TemplateSyntax { get; set; } = TemplateSyntax.Liquid;
 
     /// <summary>
@@ -41,7 +41,7 @@ public class GeneratorSetting
     ///     --var-json-file name=./xxx/filename.json 
     /// </summary>
     /// <value></value>
-    [Description("Variables declarations, can use cli option --var-string a=b or --var-json-file a=./xxx/1.json to override value.")]
+    [Description("Variables declarations, can be overrided by --var a=b or --var-json-file a=./xxx/1.json .")]
     public List<TemplateVariable> Variables { get; set; } = new List<TemplateVariable>();
 
     /// <summary>
@@ -55,7 +55,7 @@ public class GeneratorSetting
     ///     3.2 如果输出为一个目录（以/结尾），则输出到指定目录，且允许以对应语法进行目录名的变量替换，同时按模板文件的文件名进行转换输出，允许以对应的语法对文件名进行变量名替换；
     /// </summary>
     /// <value></value>
-    [Description("Path for output.")]
+    [Description("Path for output. If output is a directory, make sure ends with / or \\ .")]
     public string Output { get; set; }
 
     /// <summary>

@@ -1,0 +1,12 @@
+# default en
+MyName=personball
+
+RootCommandDesc=VZeroSoft CLI Tools
+
+# Initializer
+VsCodeSettingsFileExistsPrompt=Please edit {0} with content:\n{1}\n
+
+# Generator
+
+
+

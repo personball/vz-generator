@@ -29,6 +29,7 @@
     <Compile Remove="output\**\*" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Localization\Resources\*.resources" />
     <EmbeddedResource Include="Initializer\*.zip" />
   </ItemGroup>
 </Project>

@@ -1,0 +1,12 @@
+# zh-Hans
+MyName=Personball
+
+RootCommandDesc=VZeroSoft 命令行工具
+
+# Initializer
+VsCodeSettingsFileExistsPrompt=请参考下述内容编辑 {0} 文件:\n{1}\n
+
+# Generator
+
+
+

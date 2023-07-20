@@ -1,10 +1,13 @@
 using System.CommandLine.Invocation;
 using System.Text;
 using System.Text.Json;
+
 using Json.Schema;
 using Json.Schema.Generation;
+
 using vz_generator.Commands.Settings;
 using vz_generator.Initializer.JsonSchemas.VsCode;
+using vz_generator.Localization;
 
 namespace vz_generator.Initializer.JsonSchemas;
 public static class SettingSchemas
@@ -57,10 +60,11 @@ public static class SettingSchemas
         }
         else
         {
-            context.Console.Out.Write($@"
-Please edit .vscode{Path.DirectorySeparatorChar}settings.json with content:
-{vscode_json_schema_rule}
-");
+            context.Console.Out.Write(
+                VzLocales.L(
+                    VzLocales.Keys.VsCodeSettingsFileExistsPrompt,
+                    $".vscode{Path.DirectorySeparatorChar}settings.json",
+                    vscode_json_schema_rule));
         }
     }
 }

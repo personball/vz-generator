@@ -1,12 +1,17 @@
 ﻿using System.CommandLine;
+using System.Globalization;
 using vz_generator.Commands;
 using vz_generator.Initializer;
+using vz_generator.Localization;
 
 class Program
 {
     static async Task<int> Main(string[] args)
     {
-        var rootCommand = new RootCommand("VZeroSoft CLI Tools");
+        // Console.WriteLine(CultureInfo.CurrentCulture.Name);
+        // Console.WriteLine(VzLocales.L(VzLocales.Keys.MyName));
+
+        var rootCommand = new RootCommand(VzLocales.L(VzLocales.Keys.RootCommandDesc));
 
         var initCommand = new InitCommand();
         // initCommand.SetOptions();

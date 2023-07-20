@@ -11,7 +11,7 @@
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
-            "dependsOn": [ "clean .vzx","zip samples"], // uncomment this line when debug init subcommand
+            "dependsOn": [ "clean .vzx","zip samples","update locales"], // uncomment this line when debug init subcommand
             "problemMatcher": "$msCompile"
         },
         {
@@ -47,6 +47,11 @@
             "label": "zip samples",
             "type": "shell",
             "command": "zip -q -r Initializer/samples.zip Initializer/Samples"
+        },
+        {
+            "label": "update locales",
+            "type": "shell",
+            "command": "resgen Localization/Resources/VzLocales.zh-Hans.txt && resgen Localization/Resources/VzLocales.txt"
         }
     ]
 }
