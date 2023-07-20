@@ -12,6 +12,11 @@ public static class VzLocales
         public const string RootCommandDesc = nameof(RootCommandDesc);
 
         // Initializer
+        public const string InitCommandDesc = nameof(InitCommandDesc);
+        public const string InitOptListSampleDesc = nameof(InitOptListSampleDesc);
+        public const string InitOptWithSampleDesc = nameof(InitOptWithSampleDesc);
+        public const string JsonDeserializeFailError = nameof(JsonDeserializeFailError);
+        public const string InitSettingOptionExistsSkipWarn = nameof(InitSettingOptionExistsSkipWarn);
 
         public const string VsCodeSettingsFileExistsPrompt = nameof(VsCodeSettingsFileExistsPrompt);
 

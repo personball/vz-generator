@@ -4,8 +4,12 @@ MyName=personball
 RootCommandDesc=VZeroSoft CLI Tools
 
 # Initializer
+InitCommandDesc=Init Settings And Templates.
+InitOptListSampleDesc=list all sample names。
+InitOptWithSampleDesc=specify the name of sample which you interest. will export all samples by default, --list-samples show all sample names。
 VsCodeSettingsFileExistsPrompt=Please edit {0} with content:\n{1}\n
-
+JsonDeserializeFailError=Can't load {0}, Json Deserialize Failed: {1}\n
+InitSettingOptionExistsSkipWarn=WARN: option <{0}> from sample {1} already exists, settings skipped...\n
 # Generator
 
 

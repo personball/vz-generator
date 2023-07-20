@@ -4,8 +4,12 @@ MyName=Personball
 RootCommandDesc=VZeroSoft 命令行工具
 
 # Initializer
+InitCommandDesc=初始化配置和示例模板。
+InitOptListSampleDesc=列出所有可用示例名称。
+InitOptWithSampleDesc=--with-sample abp --with-sample vue 可多次指定需要导出的示例名称。\n不指定则默认导出全部，可以通过 --list-samples 查看所有可用示例名称。
 VsCodeSettingsFileExistsPrompt=请参考下述内容编辑 {0} 文件:\n{1}\n
-
+JsonDeserializeFailError=无法加载 {0}, Json 反序列化失败: {1}\n
+InitSettingOptionExistsSkipWarn=提示: 示例 {1} 的配置 <{0}> 已经存在, 跳过配置导出...\n
 # Generator
 
 

@@ -3,17 +3,20 @@ using System.CommandLine.Invocation;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+
 using Json.Schema;
+
 using vz_generator.Commands.Settings;
 using vz_generator.Initializer.JsonSchemas;
 using vz_generator.Initializer.JsonSchemas.VsCode;
+using vz_generator.Localization;
 
 namespace vz_generator.Initializer;
 
 public sealed class InitCommand : Command
 {
     public InitCommand()
-        : base(VzConsts.InitCmd.Name, "Init Settings And Templates.")
+        : base(VzConsts.InitCmd.Name, VzLocales.L(VzLocales.Keys.InitCommandDesc))
     {
         foreach (var opt in Options())
         {
@@ -33,14 +36,11 @@ public sealed class InitCommand : Command
 
     private static Option<bool> listSamples = new Option<bool>(
         name: "--list-samples",
-        description: "列出所有可用示例名称。",
+        description: VzLocales.L(VzLocales.Keys.InitOptListSampleDesc),
         getDefaultValue: () => false);
     private static Option<string[]> withSample = new Option<string[]>(
         name: "--with-sample",
-        description: """
-        --with-sample abp --with-sample vue 可多次指定需要导出的示例名称。
-        不指定则默认导出全部，可以通过 --list-samples 查看所有可用示例名称。
-        """);
+        description: VzLocales.L(VzLocales.Keys.InitOptWithSampleDesc));
 
     public async Task InitAsync(InvocationContext context)
     {
@@ -90,7 +90,8 @@ public sealed class InitCommand : Command
             }
             catch (JsonException ex)
             {
-                context.Console.Error.Write($"Can't load {generate_setting_path}, Json Deserialize Failed: {ex.Message}");
+                context.Console.Error.Write(
+                    VzLocales.L(VzLocales.Keys.JsonDeserializeFailError, generate_setting_path, ex.Message));
                 context.ExitCode = 2;
                 return;
             }
@@ -105,7 +106,9 @@ public sealed class InitCommand : Command
         {
             if (sampleSettings.Any(s => s.Option == item.Setting.Option))
             {
-                context.Console.Out.Write($"WARN: option <{item.Setting.Option}> from sample {item.Name} already exists, settings skipped...{Environment.NewLine}");
+                context.Console.Out.Write(
+                    VzLocales.L(VzLocales.Keys.InitSettingOptionExistsSkipWarn, item.Setting.Option, item.Name)
+                );
                 continue;
             }
 
