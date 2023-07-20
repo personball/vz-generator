@@ -11,7 +11,7 @@
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
-            // "dependsOn": [ "clean .vzx","zip samples"], // uncomment this line when debug init subcommand
+            "dependsOn": [ "clean .vzx","zip samples"], // uncomment this line when debug init subcommand
             "problemMatcher": "$msCompile"
         },
         {

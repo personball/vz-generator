@@ -31,7 +31,7 @@ After init, please see options in `.vz/generate.settings.json`
 ## Settings
 
 TODO syntax liquid help
-TODO path variable
+TODO path variable ___ -> |
 
 TODO tpl path to output path
 TODO file to file
