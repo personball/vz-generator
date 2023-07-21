@@ -46,7 +46,7 @@
         {
             "label": "zip samples",
             "type": "shell",
-            "command":"rm Initializer/samples.zip && 7zz a Initializer/samples.zip Initializer/Samples/*" // 7zip on mac
+            "command":"rm Initializer/samples.zip ; cd ./Initializer/Samples/ ; zip -q -r ../samples.zip . " // 7zip on mac
             // "command": "7z a .\\Initializer\\samples.zip .\\Initializer\\Samples\\*" // 7zip on windows
         },
         {

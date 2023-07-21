@@ -1,5 +1,13 @@
 #!/bin/bash
+
 rm nupkg/*.nupkg
+
 rm Initializer/samples.zip
-7zz a Initializer/samples.zip Initializer/Samples/*
+cd Initializer/Samples
+zip -q -r ../samples.zip . 
+cd ../../
+
+resgen Localization/Resources/VzLocales.zh-Hans.txt 
+resgen Localization/Resources/VzLocales.txt
+
 dotnet pack -c Release

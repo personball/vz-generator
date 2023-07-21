@@ -112,9 +112,12 @@ DEBUG 模式下使用 `.vzx` 路径，而非 `.vz`。
   - 请检查 `.vscode/launch.json` 中的 `"args"` 配置；
   - 请检查 `.vscode/tasks.json` 中 `build` 任务的 `dependsOn` 配置, 生成前需要执行 `clean .vzx` 和 `zip samples` 任务；
   - `clean .vzx` 任务中所使用的命令应替换为 powershell 的 `Remove-Item` 或者开发者所使用的具体 shell 下的其他等效命令；
-  - `zip samples` 任务中所使用的命令应替换为 7zip 的 `7z` 或者开发者所使用的具体 shell 下的其他等效命令。
+  - `zip samples` 任务中所使用的命令应替换为 powershell 的 `Compress-Archive` 或者开发者所使用的具体 shell 下的其他等效命令。
 - 如需调试子命令 `g`:
   - 请检查 `.vscode/launch.json` 中的 `"args"` 配置（每个字符串会被视为一个整体，空格不会被拆分）。
   - 请注释掉 `.vscode/tasks.json` 中的 `build` 任务的 `dependsOn` 配置
+
+
+仅基于 dotnet core + vscode 的开发环境可能会遇到 `resgen` 命令无法使用的问题， visual studio 应支持，但未验证。
 
 # MIT
