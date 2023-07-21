@@ -17,12 +17,24 @@ GTemplateFileNotFoundPrompt=There is no template file, nothing happened.\n
 GMultiTplOutputToSingleFileError=There are {0} Template Files, but {1} is not end with '{2}' (not directory).
 GOutputFileExistsOverridePrompt={0} is already exists, override it?
 
-GOptConfigOptDesc=加载指定配置文件。
-GOptSelectOptDesc=（可选）指定执行哪套配置，如果配置中的 option 带有空格，则此处需要引号。
-GOptTplPathOptDesc=（可选）指定模板文件位置，可以是一个目录也可以是一个文件。
-GOptSyntaxOptDesc=指定模板语法，默认为 Liquid, 其他模板引擎待开发。
-GOptVarStringOptDesc=（可选）指定变量键值, --var key1=val1 --var key2=val2 可以覆盖配置文件中的默认配置，若未完全覆盖，则会有交互提示输入。
-GOptVarJsonFileOptDesc=（可选）指定变量键值来自一个json文件， --var-json-file key1=./path/to/jsonfile --var-json-file key2=./path/to/jsonfile2 可以覆盖配置文件中的默认配置，若未完全覆盖，则会有交互提示输入。
-GOptOutputOptDesc=（可选）输出结果到指定位置。未指定则按配置文件执行，配置文件中未配置，则默认输出到./output。
-GOptOverrideOptDesc=（可选）输出文件如果已存在，是否覆盖。true 全部覆盖；false 全部跳过；默认会逐个提示。
+GOptConfigOptDesc=load specific setting file instead of .vz/generate.settings.json .
+GOptSelectOptDesc=(Optional) run which option in settings, use quote ’‘ if contains whitespace.
+GOptTplPathOptDesc=(Optional) specify file path of single template or directory contains templates.
+GOptSyntaxOptDesc=(Optional) specify syntax of template.
+GOptVarStringOptDesc=(Optional) fill value for string variables, --var key1=val1 --var key2=val2 can override default value of same key in the settings, will ask for missing variables.
+GOptVarJsonFileOptDesc=(Optional) fill file path for json variables， --var-json-file key1=./path/to/jsonfile --var-json-file key2=./path/to/jsonfile2 can override default value of same key in the settings, will ask for missing ones.
+GOptOutputOptDesc=(Optional) specify output path. can override the value in settings, if both not set, default is ./output。
+GOptOverrideOptDesc=(Optional) declare when output file exists, override it or not. True override it; False skip it; by default, will ask for decision of each file if not declared.
 
+GFailedErrorResult=Generate Fail: {0}{1}{2}
+
+GSettingTemplatePathCliPrompt=Path of Template?
+GSettingTemplateVariableValueCliPrompt=Set value of {0}
+GSettingTemplateVariableValueForJsonFileCliPrompt=Set Json File Path of {0}
+GSettingOutputCliPrompt=Path of Output?
+
+GSettingFileNotFound={0} Not Found! Please run init first!
+GSettingFileContentIsEmpty=Settings Not Found, please update {0}
+GSettingOptionNotFound=WARN: option <{0}> Not Found...
+GSettingOptionChoosePrompt=Choose One (Use ↑↓)
+GSettingOptionNotFoundError=Option <{0}> Not Found!

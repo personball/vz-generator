@@ -26,4 +26,15 @@ GOptVarJsonFileOptDesc=（可选）指定变量键值来自一个json文件， -
 GOptOutputOptDesc=（可选）输出结果到指定位置。未指定则按配置文件执行，配置文件中未配置，则默认输出到./output。
 GOptOverrideOptDesc=（可选）输出文件如果已存在，是否覆盖。true 全部覆盖；false 全部跳过；默认会逐个提示。
 
+GFailedErrorResult=生成失败: {0}{1}{2}
 
+GSettingTemplatePathCliPrompt=请输入模板路径
+GSettingTemplateVariableValueCliPrompt=请为变量 {0} 赋值
+GSettingTemplateVariableValueForJsonFileCliPrompt=请为 Json 变量 {0} 指定路径
+GSettingOutputCliPrompt=请指定输出路径
+
+GSettingFileNotFound={0} 不存在! 请先执行 init 命令进行初始化!
+GSettingFileContentIsEmpty=配置内容为空，请先更新 {0}
+GSettingOptionNotFound=提示: 选项 <{0}> 不存在...
+GSettingOptionChoosePrompt=请选择 (Use ↑↓)
+GSettingOptionNotFoundError=选项 <{0}> 不存在!

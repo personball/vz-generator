@@ -1,6 +1,9 @@
 using System.Text.Json;
+
 using Sharprompt;
+
 using vz_generator.Commands.Settings;
+using vz_generator.Localization;
 
 namespace vz_generator.Generator.Settings.SettingResolvers;
 
@@ -17,7 +20,10 @@ public class DefaultGeneratorSettingResolver : IGeneratorSettingResolver
         if (!File.Exists(filePath))
         {
             // 默认路径没有配置文件
-            throw new Exception($"{VzConsts.ConfigRoot}{Path.DirectorySeparatorChar}{VzConsts.GenerateCmd.SettingFileName} Not Found! Please run init first!");
+            throw new Exception(
+                VzLocales.L(
+                    VzLocales.Keys.GSettingFileNotFound,
+                    $"{VzConsts.ConfigRoot}{Path.DirectorySeparatorChar}{VzConsts.GenerateCmd.SettingFileName}"));
         }
 
         // load settings from file
@@ -28,26 +34,35 @@ public class DefaultGeneratorSettingResolver : IGeneratorSettingResolver
         if (!context.FileSettings.Any())
         {
             throw new Exception(
-                $"Settings Not Found, please update {VzConsts.ConfigRoot}{Path.DirectorySeparatorChar}{VzConsts.GenerateCmd.SettingFileName}");
+                VzLocales.L(
+                    VzLocales.Keys.GSettingFileContentIsEmpty,
+                    $"{VzConsts.ConfigRoot}{Path.DirectorySeparatorChar}{VzConsts.GenerateCmd.SettingFileName}"));
         }
 
         if (!string.IsNullOrWhiteSpace(context.SelectedOption)
             && context.FileSettings.FirstOrDefault(s => s.Option == context.SelectedOption) == null)
         {
-            context.InvocationContext.Console.Out.Write($"WARN: option <{context.SelectedOption}> Not Found...");
+            context.InvocationContext.Console.Out.Write(
+                VzLocales.L(
+                    VzLocales.Keys.GSettingOptionNotFound, context.SelectedOption));
+
             context.SelectedOption = null;
         }
 
         // which option?
         if (string.IsNullOrWhiteSpace(context.SelectedOption))
         {
-            context.SelectedOption = Prompt.Select("Choose One (Use ↑↓)", context.FileSettings.Select(f => f.Option));
+            context.SelectedOption = Prompt.Select(
+                VzLocales.L(VzLocales.Keys.GSettingOptionChoosePrompt),
+                context.FileSettings.Select(f => f.Option));
         }
 
         context.Result = context.FileSettings.FirstOrDefault(s => s.Option == context.SelectedOption);
         if (context.Result == null)
         {
-            throw new Exception($"Option <{context.SelectedOption}> Not Found!");
+            throw new Exception(
+                VzLocales.L(
+                    VzLocales.Keys.GSettingOptionNotFoundError, context.SelectedOption));
         }
     }
 }

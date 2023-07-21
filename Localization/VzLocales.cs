@@ -35,6 +35,18 @@ public static class VzLocales
         public const string GOptOutputOptDesc = nameof(GOptOutputOptDesc);
         public const string GOptOverrideOptDesc = nameof(GOptOverrideOptDesc);
 
+        public const string GFailedErrorResult = nameof(GFailedErrorResult);
+
+        public const string GSettingTemplatePathCliPrompt = nameof(GSettingTemplatePathCliPrompt);
+        public const string GSettingTemplateVariableValueCliPrompt = nameof(GSettingTemplateVariableValueCliPrompt);
+        public const string GSettingTemplateVariableValueForJsonFileCliPrompt = nameof(GSettingTemplateVariableValueForJsonFileCliPrompt);
+        public const string GSettingOutputCliPrompt = nameof(GSettingOutputCliPrompt);
+
+        public const string GSettingFileNotFound = nameof(GSettingFileNotFound);
+        public const string GSettingFileContentIsEmpty = nameof(GSettingFileContentIsEmpty);
+        public const string GSettingOptionNotFound = nameof(GSettingOptionNotFound);
+        public const string GSettingOptionChoosePrompt = nameof(GSettingOptionChoosePrompt);
+        public const string GSettingOptionNotFoundError = nameof(GSettingOptionNotFoundError);
     }
 
     public static string L(string key, params string[] args)

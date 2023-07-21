@@ -68,7 +68,8 @@ public sealed class GenerateCommand : Command
 
     public static Option<TemplateSyntax> SyntaxOpt = new Option<TemplateSyntax>(
         aliases: new string[] { "--syntax", "-s" },
-        description: VzLocales.L(VzLocales.Keys.GOptSyntaxOptDesc)
+        description: VzLocales.L(VzLocales.Keys.GOptSyntaxOptDesc),
+        getDefaultValue: () => TemplateSyntax.Liquid
     );
 
     public static Option<string> SelectOpt = new Option<string>(
@@ -90,7 +91,9 @@ public sealed class GenerateCommand : Command
 #if DEBUG
             Console.WriteLine($"Generate Fail: {ex.Message}{Environment.NewLine}{ex.StackTrace}");
 #endif
-            context.Console.Error.Write($"Generate Fail: {ex.Message}{Environment.NewLine}{ex.StackTrace}");
+            context.Console.Error.Write(
+                VzLocales.L(
+                    VzLocales.Keys.GFailedErrorResult, ex.Message, Environment.NewLine, ex.StackTrace));
             context.ExitCode = 2;
         }
     }
