@@ -8,8 +8,8 @@ public static class SamplesCollector
     {
         yield return AddVuePinia();
         yield return AddAbp();
-        yield return AddSwagger2Api();
-        yield return AddSwagger2View();
+        // yield return AddSwagger2Api();
+        // yield return AddSwagger2View();
     }
 
     public static Example AddVuePinia()
