@@ -9,10 +9,10 @@
     
     <PackAsTool>true</PackAsTool>
     <ToolCommandName>vz</ToolCommandName>
-    <Version>0.0.3</Version>
+    <Version>0.1.0</Version>
     <PackageOutputPath>./nupkg</PackageOutputPath>
     <Authors>personball</Authors>
-    <Description></Description>
+    <Description> A CLI Tool for File Generate with templates. </Description>
   </PropertyGroup>
 
   <ItemGroup>
