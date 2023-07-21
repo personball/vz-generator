@@ -31,7 +31,6 @@ After init, please see options in `.vz/generate.settings.json`
 ## Settings
 
 TODO syntax liquid help
-TODO path variable ___ -> |
 
 TODO tpl path to output path
 TODO file to file
@@ -122,3 +121,15 @@ DEBUG mode will use `.vzx` instead of `.vz`
 
 
 # MIT
+
+# References
+
+- UseCases like [codeBelt/generate-template-files](https://github.com/codeBelt/generate-template-files), but here we got Liquid syntax for template files and paths.
+
+- Liquid [scriban](https://github.com/scriban/scriban)
+
+- [shibayan/Sharprompt](https://github.com/shibayan/Sharprompt)
+
+- [rvegajr/Pluralize.NET.Core](https://github.com/rvegajr/Pluralize.NET.Core)
+
+- Naming [jquense/StringUtils](https://github.com/jquense/StringUtils)

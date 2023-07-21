@@ -121,3 +121,15 @@ DEBUG 模式下使用 `.vzx` 路径，而非 `.vz`。
 仅基于 dotnet core + vscode 的开发环境可能会遇到 `resgen` 命令无法使用的问题， visual studio 应支持，但未验证。
 
 # MIT
+
+# 参考
+
+- 用例类似 [codeBelt/generate-template-files](https://github.com/codeBelt/generate-template-files)，不过，这里引入了 Liquid 模板语法进行增强。
+
+- Liquid [scriban](https://github.com/scriban/scriban)
+
+- [shibayan/Sharprompt](https://github.com/shibayan/Sharprompt)
+
+- [rvegajr/Pluralize.NET.Core](https://github.com/rvegajr/Pluralize.NET.Core)
+
+- Naming [jquense/StringUtils](https://github.com/jquense/StringUtils)
