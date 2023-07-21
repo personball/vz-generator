@@ -12,7 +12,7 @@
             // If you have changed target frameworks, make sure to update the program path.
             "program": "${workspaceFolder}/bin/Debug/net7.0/vz-generator.dll",
             // "args": ["g","-c",".vzx/generate.settings.json","-p","Create Abp","--var","entity=User","--var","project=VZero","--override","false"],
-            "args":["init","-h"],
+            "args":["init"],
             "cwd": "${workspaceFolder}",
             // For more information about the 'console' field, see https://aka.ms/VSCode-CS-LaunchJson-Console
             "console": "integratedTerminal",//"internalConsole",
