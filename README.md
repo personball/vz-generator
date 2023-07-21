@@ -112,9 +112,13 @@ DEBUG mode will use `.vzx` instead of `.vz`
   - should check `"args"` in `.vscode/launch.json`
   - should check `dependsOn` of `build` task in `.vscode/tasks.json`, before build should run `clean .vzx` and `zip samples`
   - the commands in task `clean .vzx` should be change to powershell `Remove-Item` or sth works in the specific shell.
-  - the commands in task `zip samples` should be change to 7zip `7z` or sth works in the specific shell.
+  - the commands in task `zip samples` should be change to powershell `Compress-Archive` or sth works in the specific shell.
 - For DEBUG SubCommand `g`:
   - should check `"args"` in `.vscode/launch.json`, and strings in it will treated as tokens (whitespace will not parsed).
   - should commented out the line `dependsOn` of `build` task in `.vscode/tasks.json`
+
+
+`resgen` maybe problem on windows when develop with pure dotnet core with vs code, but visual studio should work (not confrim). 
+
 
 # MIT

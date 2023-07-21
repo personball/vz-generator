@@ -41,17 +41,17 @@
         {
             "label": "clean .vzx",
             "type": "shell",
-            // "command": "rm -rf .vzx" // on mac
-            "command":"(Test-Path .vzx) -and (Remove-Item -Recurse .vzx)" // on windows
+            "command": "rm -rf .vzx" // on mac
+            // "command":"(Test-Path .vzx) -and (Remove-Item -Recurse .vzx)" // on windows
         },
         {
             "label": "zip samples",
             "type": "shell",
-            // "command":"rm Initializer/samples.zip && 7zz a Initializer/samples.zip Initializer/Samples/*" // on mac
-            "command": "Compress-Archive -Path .\\Initializer\\Samples\\* -DestinationPath .\\Initializer\\samples.zip" // on windows
+            "command":"rm Initializer/samples.zip ; cd ./Initializer/Samples/ ; zip -q -r ../samples.zip . " // on mac
+            // "command": "Compress-Archive -Path .\\Initializer\\Samples\\* -DestinationPath .\\Initializer\\samples.zip" // on windows
         },
         {
-            "label": "update locales", // resgen may not work on windows
+            "label": "update locales", // resgen may not work on windows without visual studio
             "type": "shell",
             "command": "(resgen Localization/Resources/VzLocales.zh-Hans.txt) -and (resgen Localization/Resources/VzLocales.txt)"
         }
