@@ -46,7 +46,7 @@
         {
             "label": "zip samples",
             "type": "shell",
-            "command": "zip -q -r Initializer/samples.zip Initializer/Samples"
+            // "command": "7z a .\\Initializer\\samples2.zip .\\Initializer\\Samples\\*"
         },
         {
             "label": "update locales",
