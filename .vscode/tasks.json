@@ -11,7 +11,11 @@
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
-            "dependsOn": [ "clean .vzx","zip samples","update locales"], // uncomment this line when debug init subcommand
+            "dependsOn": [ // uncomment this line when debug init subcommand
+                "clean .vzx",
+                "zip samples",
+                "update locales"
+                ], 
             "problemMatcher": "$msCompile"
         },
         {
@@ -48,7 +52,7 @@
             "label": "zip samples",
             "type": "shell",
             "command":"rm Initializer/samples.zip ; cd ./Initializer/Samples/ ; zip -q -r ../samples.zip . " // on mac
-            // "command": "Compress-Archive -Path .\\Initializer\\Samples\\* -DestinationPath .\\Initializer\\samples.zip" // on windows
+            // "command": "Compress-Archive -Force -Path .\\Initializer\\Samples\\* -DestinationPath .\\Initializer\\samples.zip" // on windows
         },
         {
             "label": "update locales", // resgen may not work on windows without visual studio

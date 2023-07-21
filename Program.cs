@@ -8,13 +8,9 @@ class Program
 {
     static async Task<int> Main(string[] args)
     {
-        // Console.WriteLine(CultureInfo.CurrentCulture.Name);
-        // Console.WriteLine(VzLocales.L(VzLocales.Keys.MyName));
-
         var rootCommand = new RootCommand(VzLocales.L(VzLocales.Keys.RootCommandDesc));
 
         var initCommand = new InitCommand();
-        // initCommand.SetOptions();
         initCommand.SetHandler(async (ctx) => await initCommand.InitAsync(ctx));
         rootCommand.AddCommand(initCommand);
 
