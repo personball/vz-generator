@@ -1,5 +1,7 @@
 #!/bin/bash
 
+rm -rf .vz
+rm -rf .vzx
 rm nupkg/*.nupkg
 
 rm Initializer/samples.zip

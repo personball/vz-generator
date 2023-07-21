@@ -8,11 +8,19 @@
     <Nullable>enable</Nullable>
     
     <PackAsTool>true</PackAsTool>
+    <PackageOutputPath>./nupkg</PackageOutputPath>
     <ToolCommandName>vz</ToolCommandName>
     <Version>0.1.0</Version>
-    <PackageOutputPath>./nupkg</PackageOutputPath>
     <Authors>personball</Authors>
+    <PackageProjectUrl>https://github.com/personball/vz-generator</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/personball/vz-generator</RepositoryUrl>
+    <PackageTags>File Generator vz genterate Liquid Template</PackageTags>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <Description> A CLI Tool for File Generate with templates. </Description>
+    <PackageReleaseNotes>
+      v0.1.0 publish to nuget.org;
+    </PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
@@ -31,5 +39,8 @@
   <ItemGroup>
     <EmbeddedResource Include="Localization\Resources\*.resources"  />
     <EmbeddedResource Include="Initializer\*.zip" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="\"/>
   </ItemGroup>
 </Project>
