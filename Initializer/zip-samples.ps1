@@ -1,0 +1,1 @@
+Compress-Archive -Path Samples/* -DestinationPath ./samples2.zip
