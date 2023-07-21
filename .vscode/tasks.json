@@ -46,7 +46,8 @@
         {
             "label": "zip samples",
             "type": "shell",
-            // "command": "7z a .\\Initializer\\samples2.zip .\\Initializer\\Samples\\*"
+            "command":"7zz a Initializer/samples.zip Initializer/Samples/*" // 7zip on mac
+            // "command": "7z a .\\Initializer\\samples.zip .\\Initializer\\Samples\\*" // 7zip on windows
         },
         {
             "label": "update locales",

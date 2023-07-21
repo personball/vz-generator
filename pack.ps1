@@ -1,7 +1,5 @@
 rm nupkg/*.nupkg
 rm Initializer/samples.zip
-cd Initializer
-.\zip-samples.ps1
-cd ..
+7z a .\\Initializer\\samples.zip .\\Initializer\\Samples\\*
 dotnet pack -c Release
 

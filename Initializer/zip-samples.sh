@@ -1,1 +1,0 @@
-zip -q -r ./samples.zip Samples/*
