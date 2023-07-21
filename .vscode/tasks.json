@@ -11,10 +11,10 @@
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
-            "dependsOn": [ // uncomment this line when debug init subcommand
+            "dependsOn": [ // comment dependsOn when debug g subcommand
                 "clean .vzx",
                 "zip samples",
-                "update locales"
+                "update locales" // comment this line on windows
                 ], 
             "problemMatcher": "$msCompile"
         },
@@ -57,7 +57,7 @@
         {
             "label": "update locales", // resgen may not work on windows without visual studio
             "type": "shell",
-            "command": "(resgen Localization/Resources/VzLocales.zh-Hans.txt) -and (resgen Localization/Resources/VzLocales.txt)"
+            "command": "resgen Localization/Resources/VzLocales.zh-Hans.txt && resgen Localization/Resources/VzLocales.txt"
         }
     ]
 }
