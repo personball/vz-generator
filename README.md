@@ -119,6 +119,13 @@ DEBUG mode will use `.vzx` instead of `.vz`
 
 `resgen` maybe problem on windows when develop with pure dotnet core with vs code, but visual studio should work (not confrim). 
 
+## Template Development
+
+the `-w` option of subommand `g`, will watch the folder which template files belong to, and regenerate the output in time. It facilitates the development of templates.
+
+    vz g -w 
+
+It will not watch the setting file, or ask you for any options or inputs again (only watch templates).
 
 # MIT
 

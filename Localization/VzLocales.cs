@@ -34,6 +34,9 @@ public static class VzLocales
         public const string GOptVarJsonFileOptDesc = nameof(GOptVarJsonFileOptDesc);
         public const string GOptOutputOptDesc = nameof(GOptOutputOptDesc);
         public const string GOptOverrideOptDesc = nameof(GOptOverrideOptDesc);
+        public const string GOptWatchOptDesc = nameof(GOptWatchOptDesc);
+
+
 
         public const string GFailedErrorResult = nameof(GFailedErrorResult);
 

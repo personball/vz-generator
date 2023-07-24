@@ -1,5 +1,4 @@
 using System.CommandLine.Invocation;
-using System.Dynamic;
 using System.Text.Json;
 
 using Scriban;
@@ -13,6 +12,7 @@ using vz_generator.Generator.Liquid.Scriban;
 using vz_generator.Localization;
 
 namespace vz_generator.Generator.Liquid;
+
 public class LiquidTemplateExecutor
 {
     private readonly GeneratorSetting _setting;
@@ -51,9 +51,8 @@ public class LiquidTemplateExecutor
                     }
 
                     var text = await file.OpenText().ReadToEndAsync();
-                    dynamic json = JsonSerializer.Deserialize<ExpandoObject>(text);
-
-                    variableObj.Add(item.Name, json);
+                    using var json = JsonDocument.Parse(text);
+                    variableObj.Add(item.Name, ConvertFromJson(json.RootElement));
                 }
             }
 
@@ -188,4 +187,67 @@ public class LiquidTemplateExecutor
             CollectTemplateFiles(item, tplFiles);
         }
     }
+
+    // 转换 Json 对象为 IScriptObject
+    // https://github.com/lunet-io/lunet/blob/54ed2989f92883d925f89b04f36366c229896fba/src/Lunet.Json/JsonUtil.cs#L62-L119
+    private static object ConvertFromJson(JsonElement element)
+    {
+        switch (element.ValueKind)
+        {
+            case JsonValueKind.Object:
+                var obj = new ScriptObject();
+                foreach (var prop in element.EnumerateObject())
+                {
+                    obj[prop.Name] = ConvertFromJson(prop.Value);
+                }
+
+                return obj;
+            case JsonValueKind.Array:
+                var array = new ScriptArray();
+                foreach (var nestedElement in element.EnumerateArray())
+                {
+                    array.Add(ConvertFromJson(nestedElement));
+                }
+                return array;
+            case JsonValueKind.String:
+                return element.GetString();
+            case JsonValueKind.Number:
+                if (element.TryGetInt32(out var intValue))
+                {
+                    return intValue;
+                }
+                else if (element.TryGetInt64(out var longValue))
+                {
+                    return longValue;
+                }
+                else if (element.TryGetUInt32(out var uintValue))
+                {
+                    return uintValue;
+                }
+                else if (element.TryGetUInt64(out var ulongValue))
+                {
+                    return ulongValue;
+                }
+                else if (element.TryGetDecimal(out var decimalValue))
+                {
+                    return decimalValue;
+                }
+                else if (element.TryGetDouble(out var doubleValue))
+                {
+                    return doubleValue;
+                }
+                else
+                {
+                    throw new InvalidOperationException($"Unable to convert number {element}");
+                }
+            case JsonValueKind.True:
+                return BoolTrue;
+            case JsonValueKind.False:
+                return BoolFalse;
+            default:
+                return null;
+        }
+    }
+    private static readonly object BoolTrue = true;
+    private static readonly object BoolFalse = false;
 }

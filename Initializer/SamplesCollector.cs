@@ -8,7 +8,7 @@ public static class SamplesCollector
     {
         yield return AddVuePinia();
         yield return AddAbp();
-        // yield return AddSwagger2Api();
+        yield return AddSwagger2Api();
         // yield return AddSwagger2View();
     }
 
@@ -81,18 +81,30 @@ public static class SamplesCollector
                VzConsts.ConfigRoot,
                VzConsts.TemplateRoot,
                VzConsts.SampleRoot,
-               "swagger2api"
+               "swagger2api",
+               "webapiclient.sbn"
            ),
             Output = Path.Combine(
                ".",
-               "src",
-               "apis",
-               "modules",
-               "{{name}}.js")
+               "output",
+               "{{host}}Apis.cs")
         };
 
-        setting.Variables.Add(new TemplateVariable { Name = "name", Type = TemplateVariableType.String });
-        setting.Variables.Add(new TemplateVariable { Name = "module", Type = TemplateVariableType.String });
+        setting.Variables.Add(new TemplateVariable { Name = "host", Type = TemplateVariableType.String });
+        setting.Variables.Add(new TemplateVariable { Name = "namespace", Type = TemplateVariableType.String });
+        setting.Variables.Add(new TemplateVariable
+        {
+            Name = "swagger",
+            Type = TemplateVariableType.JsonFile,
+            DefaultValue = Path.Combine(
+               ".",
+               VzConsts.ConfigRoot,
+               VzConsts.TemplateRoot,
+               VzConsts.SampleRoot,
+               "swagger2api",
+               "openapi3.json"
+            )
+        });
 
         return new Example
         {

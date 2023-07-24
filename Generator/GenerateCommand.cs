@@ -1,5 +1,6 @@
 using System.CommandLine;
 using System.CommandLine.Invocation;
+using System.Diagnostics;
 
 using vz_generator.Commands.Settings;
 using vz_generator.Generator.Liquid;
@@ -32,6 +33,7 @@ public sealed class GenerateCommand : Command
         yield return VarJsonFileOpt;
         yield return OutputOpt;
         yield return OverrideOpt;
+        yield return WatchOpt;
     }
     public static Option<FileInfo> ConfigOpt = new Option<FileInfo>(
         aliases: new string[] { "--config", "-c" },
@@ -77,24 +79,80 @@ public sealed class GenerateCommand : Command
         description: VzLocales.L(VzLocales.Keys.GOptSelectOptDesc)
     );
 
+    public static Option<bool> WatchOpt = new Option<bool>(
+        aliases: new string[] { "--watch", "-w" },
+        description: VzLocales.L(VzLocales.Keys.GOptWatchOptDesc),
+        getDefaultValue: () => false
+    );
+
     // TODO: 完全忽略配置，不指定option，从标准输入(argument.0)接收模板内容（仅支持单个文件）
+
+    private FileSystemWatcher TemplateWatcher = null;
 
     public async Task GenerateAsync(InvocationContext context)
     {
-        try
+        var watched = context.ParseResult.GetValueForOption(WatchOpt);
+
+        // TODO: settings hot reload?
+        var setting = await LoadSettings(context);
+
+        if (watched)
         {
-            var setting = await LoadSettings(context);
-            await ExecuteAsync(setting, context);
-        }
-        catch (System.Exception ex)
-        {
+            // keep running, timer
+            var watchPath = Path.GetDirectoryName(setting.TemplatePath);
+            context.Console.Write($"Start watching {watchPath} ...{Environment.NewLine}");
+            TemplateWatcher = new FileSystemWatcher(watchPath);
+
+            TemplateWatcher.NotifyFilter = NotifyFilters.Attributes
+                                | NotifyFilters.CreationTime
+                                | NotifyFilters.DirectoryName
+                                | NotifyFilters.FileName
+                                | NotifyFilters.LastAccess
+                                | NotifyFilters.LastWrite
+                                | NotifyFilters.Security
+                                | NotifyFilters.Size;
+
+            TemplateWatcher.Changed += OnChanged;
+            TemplateWatcher.Created += OnChanged;
+            TemplateWatcher.Deleted += OnChanged;
+            TemplateWatcher.Renamed += OnChanged;
+            TemplateWatcher.Error += OnError;
+
+            TemplateWatcher.Filter = "";
+            TemplateWatcher.IncludeSubdirectories = true;
+            TemplateWatcher.EnableRaisingEvents = true;
+
+            async void OnChanged(object sender, FileSystemEventArgs e)
+            {
+                context.Console.Write($"{e.FullPath} {e.ChangeType}. Re-generating...");
+                var stopWatch = Stopwatch.StartNew();
+                stopWatch.Start();
+                await ExecuteAsync(setting, context);
+                stopWatch.Stop();
+                context.Console.Write($"completed in {stopWatch.ElapsedMilliseconds}ms.{Environment.NewLine}");
+            }
+
+            async void OnError(object sender, ErrorEventArgs e)
+            {
+                var ex = e.GetException();
 #if DEBUG
-            Console.WriteLine($"Generate Fail: {ex.Message}{Environment.NewLine}{ex.StackTrace}");
+                Console.WriteLine($"Generate Fail: {ex.Message}{Environment.NewLine}{ex.StackTrace}");
 #endif
-            context.Console.Error.Write(
-                VzLocales.L(
-                    VzLocales.Keys.GFailedErrorResult, ex.Message, Environment.NewLine, ex.StackTrace));
-            context.ExitCode = 2;
+                context.Console.Error.Write(
+                    VzLocales.L(
+                        VzLocales.Keys.GFailedErrorResult, ex.Message, Environment.NewLine, ex.StackTrace));
+                context.ExitCode = 2;
+            }
+        }
+
+        await ExecuteAsync(setting, context);
+
+        if (watched)
+        {
+            Console.WriteLine("Press enter to exit.");
+            Console.ReadLine();
+
+            TemplateWatcher?.Dispose();
         }
     }
 
@@ -114,13 +172,26 @@ public sealed class GenerateCommand : Command
 
     private async Task ExecuteAsync(GeneratorSetting setting, InvocationContext context)
     {
-        if (setting.TemplateSyntax == TemplateSyntax.Liquid)
+        try
         {
-            var executor = new LiquidTemplateExecutor(setting, context);
-            await executor.ExecuteAsync();
-            return;
-        }
+            if (setting.TemplateSyntax == TemplateSyntax.Liquid)
+            {
+                var executor = new LiquidTemplateExecutor(setting, context);
+                await executor.ExecuteAsync();
+                return;
+            }
 
-        throw new NotImplementedException();
+            throw new NotImplementedException();
+        }
+        catch (System.Exception ex)
+        {
+#if DEBUG
+            Console.WriteLine($"Generate Fail: {ex.Message}{Environment.NewLine}{ex.StackTrace}");
+#endif
+            context.Console.Error.Write(
+                VzLocales.L(
+                    VzLocales.Keys.GFailedErrorResult, ex.Message, Environment.NewLine, ex.StackTrace));
+            context.ExitCode = 2;
+        }
     }
 }
