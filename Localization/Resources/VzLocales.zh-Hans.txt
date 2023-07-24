@@ -25,6 +25,7 @@ GOptVarStringOptDesc=（可选）指定变量键值, --var key1=val1 --var key2=
 GOptVarJsonFileOptDesc=（可选）指定变量键值来自一个json文件， --var-json-file key1=./path/to/jsonfile --var-json-file key2=./path/to/jsonfile2 可以覆盖配置文件中的默认配置，若未完全覆盖，则会有交互提示输入。
 GOptOutputOptDesc=（可选）输出结果到指定位置。未指定则按配置文件执行，配置文件中未配置，则默认输出到./output。
 GOptOverrideOptDesc=（可选）输出文件如果已存在，是否覆盖。true 全部覆盖；false 全部跳过；默认会逐个提示。
+GOptWatchOptDesc=(可选) 是否监视模板文件的变更, 热重载, 及时渲染模板 (促进模板的编写)。
 
 GFailedErrorResult=生成失败: {0}{1}{2}
 
