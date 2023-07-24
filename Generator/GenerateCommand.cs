@@ -1,5 +1,6 @@
 using System.CommandLine;
 using System.CommandLine.Invocation;
+using System.Diagnostics;
 
 using vz_generator.Commands.Settings;
 using vz_generator.Generator.Liquid;
@@ -123,8 +124,12 @@ public sealed class GenerateCommand : Command
 
             async void OnChanged(object sender, FileSystemEventArgs e)
             {
-                context.Console.Write($"{e.FullPath} {e.ChangeType}. Re-generating...{Environment.NewLine}");
+                context.Console.Write($"{e.FullPath} {e.ChangeType}. Re-generating...");
+                var stopWatch = Stopwatch.StartNew();
+                stopWatch.Start();
                 await ExecuteAsync(setting, context);
+                stopWatch.Stop();
+                context.Console.Write($"completed in {stopWatch.ElapsedMilliseconds}ms.{Environment.NewLine}");
             }
 
             async void OnError(object sender, ErrorEventArgs e)
