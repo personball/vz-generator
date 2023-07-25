@@ -1,14 +1,303 @@
 using System;
 using System.Collections.Generic;
-using System.Text.Json.Serialization;
-using System.Runtime.Serialization;
-using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
-
+using System.Net.Http;
+using System.Threading;
+using System.Threading.Tasks;
+using WebApiClientCore;
+using WebApiClientCore.Attributes;
+using WebApiClientCore.Parameters;
 namespace {{namespace}};
+{{~# helpers func~}}
+{{~func render_summary~}}
+    {{~if $0~}}
+/// <summary>
+/// {{$0}}
+/// </summary>
+    {{~end~}}
+{{~end~}}
+{{~ func render_default_annotations ~}}
+[LoggingFilter]
+    {{~ if $0 ~}}
+[HttpHost("{{$0}}")]
+    {{~ end ~}}
+{{~ end ~}}
+{{~
+    func array_equals
+        if $0.size!=$1.size
+            ret false
+        end
 
-// clients
-// 枚举所有 path 的 operation 到 tags，反向建立 tag 到 path 的分组
+        if $0.size==0
+            ret true
+        end
 
+        $arr=$0 |array.add_range $1
+        $arr=array.uniq $arr
+
+        ret $arr.size==$0.size
+    end
+    enums={}
+    func get_or_create_enums # name value_list ind
+        $0=$0|pascal_case
+        if enums[$0]
+            # equals or not?
+            if array_equals enums[$0] $1
+                ret $0
+            else
+                $ind=$2 ? $2++ : 2
+                ret get_or_create_enums $0+$ind $1 $ind
+            end
+        else
+            enums[$0]=$1
+            ret $0
+        end
+    end
+
+    func map_schema_to_csharp(schema,pre=null,post=null)
+        if !schema
+            ret ""
+        end
+        if schema.type=="object"
+            $ret_type="Dictionary<string, "
+            $sub_prop=schema.additionalProperties
+            if $sub_prop
+                if $sub_prop.type == "integer"&&$sub_prop.format=="int32"
+                    $ret_type+="int>"
+                end
+                if $sub_prop.type == "integer"&&$sub_prop.format=="int64"
+                    $ret_type+="long>"
+                end
+                if $sub_prop.type == "string"
+                    $ret_type+="string>"
+                end
+            else
+                $ret_type+="object>"
+            end
+            ret pre+$ret_type+post
+        else if schema.type=="array"
+            $ret_type="IEnumerable<"
+            if schema.items&&schema.items.type
+                $ret_type+=schema.items.type+">"
+            else if schema.items&&schema.items["$ref"]
+                $matchs=regex.match schema.items["$ref"] `([^/]*)$`
+                $ret_type+=$matchs[0] +">"
+            else
+                $ret_type+="object>"
+            end
+            ret pre+$ret_type+post
+        else if schema.type=="string"
+            if schema.enum
+                $ret_e_type= get_or_create_enums (t??model?.key)+(pname??prop?.key??'Enum'|pascal_case) schema.enum
+                ret  pre+ $ret_e_type+post
+            else if schema.format&&schema.format=="date-time"
+                ret pre+"System.DateTimeOffset"+post # DateTimeOffset? timestamp?
+            else
+                ret pre+schema.type+post
+            end
+        else if schema.type=="boolean"
+            ret pre+"bool"+post
+        else if schema.type=="integer"
+            if schema.format&&schema.format=="int64"
+                ret pre+"long"+post
+            else
+                ret pre+"int"+post
+            end
+        else if schema["$ref"]
+            $matchs=regex.match schema["$ref"] `([^/]*)$`
+            ret  pre+$matchs[0]+post
+        else
+            ret pre+schema+post
+        end
+    end #end of map_schema_to_csharp
+
+    func get_request_paras
+        if $0&&$0.size>0
+            $inputs=""
+            # path
+            func is_in_path(item)
+                ret item["in"]=="path"
+            end
+            $paths= $0|array.filter @is_in_path
+            for $path in $paths
+                if $path.required
+                     $inputs+="[Required]"
+                end
+                $inputs+= map_schema_to_csharp($path.schema) + " "
+                $inputs+= $path.name+", "
+            end
+
+            # header
+            func is_in_header(item)
+                ret item["in"]=="header"
+            end
+            $headers= $0|array.filter @is_in_header
+            for $header in $headers
+                if $header.required
+                    $inputs+="[Required]"
+                end
+                $inputs+= "[Header(\""+$header.name+"\")]"
+                $inputs+= map_schema_to_csharp($header.schema) + " "
+                $inputs+= $header.name+", "
+            end
+
+            # query
+            func is_in_query(item)
+                ret item["in"]=="query"
+            end
+            $querys= $0|array.filter @is_in_query
+            for $query in $querys
+                if $query.required
+                    $inputs+="[Required]"
+                end
+                pname=$query.name # hack through global variable
+                $inputs+= map_schema_to_csharp($query.schema) + " "
+                $inputs+= $query.name+", "
+            end
+
+            ret $inputs+"CancellationToken cancellationToken = default"
+        end
+        ret "CancellationToken cancellationToken = default"
+    end #end of get_request_paras
+    
+    func get_request_body
+        $body_type=""
+        if $0
+            if $0.required
+                $body_type="[Required] "
+            end
+            $body_json_schema=$0.content?!$0.content["application/json"]
+            if $body_json_schema
+                $body_type+="[JsonContent] "
+                $body_type+=map_schema_to_csharp $body_json_schema.schema
+            else
+                $stream_schema=$0.content?!$0.content["application/octet-stream"]
+                if $stream_schema
+                    $body_type+="FormDataFile"
+                end
+            end
+            ~}}{{$body_type}} body, {{
+        end
+    end #end of get_request_body
+
+    func get_response_type
+        if $0.default&&$0.default.content
+            $schema=$0.default.content["application/json"].schema
+        end
+        if $0&&$0["200"]&&$0["200"].content
+            $schema=$0["200"].content["application/json"].schema
+        else if $0&&$0["204"]&&$0["204"].content
+            $schema=$0["204"].content["application/json"].schema
+        end
+        ret map_schema_to_csharp $schema "<" ">"
+    end #end of get_response_type
+
+    func r_path_if_tag_match(v,t,k) 
+    ~}}
+        {{~r_verb_if_not_null v.put 'put' k~}}
+        {{~r_verb_if_not_null v.post 'post' k~}}
+        {{~r_verb_if_not_null v.get 'get' k~}}
+        {{~r_verb_if_not_null v.delete 'delete' k~}}
+    {{~ 
+    end # end of r_path_if_tag_match
+
+    func r_verb_if_not_null(v,verb,k)
+        if v&&v.tags[0]==t
+    ~}}
+        {{~if v.summary~}}
+    /// <summary>
+    /// {{v.summary}}
+    /// </summary>
+        {{~end~}}
+    {{~r_param_summary v~}}
+    [Http{{verb|pascal_case}}("{{k}}")]
+    {{(v.responses|object.keys|array.contains '200')||(v.responses|object.keys|array.contains 'default')?'I':''~}}
+Task{{~get_response_type v.responses}} {{v.operationId|pascal_case}}Async({{~
+        # requestBody
+        get_request_body v.requestBody
+    ~}}
+    {{~ #parameters
+        get_request_paras v.parameters
+    ~}});
+
+    {{~
+        end #end of v
+    end #end of r_verb_if_not_null
+
+    func r_param_summary(v)
+~}}
+{{~r_request_body_summary v.requestBody~}}
+{{~r_request_paras_summary v.parameters~}}
+    /// <param name="cancellationToken">cancellationToken</param>
+{{~r_return_paras_summary v.responses~}}
+{{~
+    end #end of r_param_summary
+
+    func r_request_body_summary(body)
+        if body&&body.description
+~}}
+    /// <param name="body">{{body.description}}</param>
+{{~
+        end
+    end #end of r_request_body_summary
+
+    func r_request_paras_summary(paras)
+        if paras&&paras.size>0
+            for p in paras
+~}}
+    /// <param name="{{p.name}}">{{p.description}}</param>
+{{~
+            end
+        end
+    end #end of r_request_paras_summary
+
+    func r_return_paras_summary(resp)
+        if resp&&resp["200"]&&resp["200"].description
+~}}
+    /// <returns>{{resp["200"].description}}</returns>
+{{~
+        end
+    end
+~}}
+{{~# Start Render ...~}}
+{{~for t in swagger.tags}}
+    {{~ tag=t.name ~}}
+    {{~t.description|render_summary~}}
+    {{~ if swagger.servers&&swagger.servers.size>0 ~}}
+        {{~ swagger.servers[0].url|render_default_annotations~}}
+    {{~ end ~}}
+public interface I{{tag|pascal_case}}Api : IHttpApi
+{
+    {{~for path in swagger.paths~}}
+    {{~r_path_if_tag_match path.value tag path.key~}}
+    {{~end}}
+}
+{{~end~}}
 // models
+{{~
+    func r_class_property(props)
+        for prop in props
+~}}
+    [JsonPropertyName("{{prop.key}}")]
+    public {{map_schema_to_csharp prop.value}} {{prop.key|pascal_case}} {get;set;}
+{{~
+        end
+    end # r_class_property
+~}}
 
+{{for model in swagger.components.schemas}}
+public class {{model.key|pascal_case}}
+{
+{{r_class_property model.value.properties}}
+}
+{{end}}
+// enums
+{{for $e in enums}}
+public enum {{$e.key}}
+{
+    {{for $v in $e.value}}
+    [EnumMember(Value = @"{{$v}}")]
+    {{$v|pascal_case}} = {{for.index}} ,
+    {{end}}
+}
+{{end}}
