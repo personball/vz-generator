@@ -136,12 +136,13 @@ public sealed class GenerateCommand : Command
             {
                 var ex = e.GetException();
 #if DEBUG
-                Console.WriteLine($"Generate Fail: {ex.Message}{Environment.NewLine}{ex.StackTrace}");
-#endif
+                Console.WriteLine($"Generate Fail: {ex.Message}{Environment.NewLine}");
+#else
                 context.Console.Error.Write(
                     VzLocales.L(
                         VzLocales.Keys.GFailedErrorResult, ex.Message, Environment.NewLine, ex.StackTrace));
                 context.ExitCode = 2;
+#endif
             }
         }
 
@@ -186,12 +187,13 @@ public sealed class GenerateCommand : Command
         catch (System.Exception ex)
         {
 #if DEBUG
-            Console.WriteLine($"Generate Fail: {ex.Message}{Environment.NewLine}{ex.StackTrace}");
-#endif
+            Console.WriteLine($"Generate Fail: {ex.Message}{Environment.NewLine}");
+#else
             context.Console.Error.Write(
                 VzLocales.L(
                     VzLocales.Keys.GFailedErrorResult, ex.Message, Environment.NewLine, ex.StackTrace));
             context.ExitCode = 2;
+#endif
         }
     }
 }

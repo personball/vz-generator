@@ -133,6 +133,13 @@ public class LiquidTemplateExecutor
             var fileOverride = _context.ParseResult.GetValueForOption(GenerateCommand.OverrideOpt);
             if (File.Exists(outputFilePath))
             {
+                // if -w always override output
+                var watched = _context.ParseResult.GetValueForOption(GenerateCommand.WatchOpt);
+                if (watched)
+                {
+                    fileOverride = true;
+                }
+                
                 // 存在，是否覆盖？
                 var doIt = false;
                 if (!fileOverride.HasValue)

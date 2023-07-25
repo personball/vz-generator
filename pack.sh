@@ -1,6 +1,6 @@
 #!/bin/bash
 
-rm -rf .vz
+# rm -rf .vz
 rm -rf .vzx
 rm nupkg/*.nupkg
 
