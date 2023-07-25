@@ -125,7 +125,8 @@ the `-w` option of subommand `g`, will watch the folder which template files bel
 
     vz g -w 
 
-It will not watch the setting file, or ask you for any options or inputs again (only watch templates).
+It will not watch the setting file, or ask you for any options or inputs again (only watch templates).  
+In `watch` mode, output always override exists files.
 
 # MIT
 
