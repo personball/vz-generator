@@ -10,7 +10,6 @@
     <PackAsTool>true</PackAsTool>
     <PackageOutputPath>./nupkg</PackageOutputPath>
     <ToolCommandName>vz</ToolCommandName>
-    <Version>0.2.3</Version>
     <Authors>personball</Authors>
     <PackageProjectUrl>https://github.com/personball/vz-generator</PackageProjectUrl>
     <RepositoryUrl>https://github.com/personball/vz-generator</RepositoryUrl>
@@ -18,6 +17,7 @@
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <Description> A CLI Tool for File Generate with templates. </Description>
+    <Version>0.2.4</Version>
     <PackageReleaseNotes>
       v0.1.0 publish to nuget.org;
       v0.1.1 clean samples;
