@@ -71,9 +71,9 @@ public class LiquidTemplateExecutor
             throw new ArgumentNullException(nameof(_setting.TemplatePath), $"{tplRoot} Not Exists!");
         }
 
-        var fileAttrs = File.GetAttributes(tplRoot);
+        var tplRootFileAttrs = File.GetAttributes(tplRoot);
 
-        if (fileAttrs.HasFlag(FileAttributes.Directory))
+        if (tplRootFileAttrs.HasFlag(FileAttributes.Directory))
         {
             // directory
             CollectTemplateFiles(tplRoot, tplFiles);
@@ -82,6 +82,8 @@ public class LiquidTemplateExecutor
         {
             // file
             tplFiles.Add(new FileInfo(tplRoot));
+            // reset tplRoot as directory
+            tplRoot = Path.GetDirectoryName(tplRoot);
         }
 
         if (!tplFiles.Any())
@@ -139,7 +141,7 @@ public class LiquidTemplateExecutor
                 {
                     fileOverride = true;
                 }
-                
+
                 // 存在，是否覆盖？
                 var doIt = false;
                 if (!fileOverride.HasValue)
@@ -178,7 +180,10 @@ public class LiquidTemplateExecutor
         return Path.Join( // Path.Combine will reset root when it meet a '/'
             ".",
             Path.GetRelativePath(".", outputRoot),
-            Path.GetFullPath(tplFullName).Replace(Path.GetFullPath(tplRoot), string.Empty));
+            Path.GetFullPath(tplFullName)
+                .Replace(
+                    Path.GetFullPath(tplRoot)
+                        .EnsureEndsWithDirectorySeparatorChar(), string.Empty));
     }
 
     private void CollectTemplateFiles(string tplRoot, List<FileInfo> tplFiles)

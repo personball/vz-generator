@@ -104,15 +104,18 @@ public sealed class InitCommand : Command
 
         foreach (var item in examples)
         {
-            if (sampleSettings.Any(s => s.Option == item.Setting.Option))
+            foreach (var setting in item.Settings)
             {
-                context.Console.Out.Write(
-                    VzLocales.L(VzLocales.Keys.InitSettingOptionExistsSkipWarn, item.Setting.Option, item.Name)
-                );
-                continue;
-            }
+                if (sampleSettings.Any(s => s.Option == setting.Option))
+                {
+                    context.Console.Out.Write(
+                        VzLocales.L(VzLocales.Keys.InitSettingOptionExistsSkipWarn, setting.Option, item.Name)
+                    );
+                    continue;
+                }
 
-            sampleSettings.Add(item.Setting);
+                sampleSettings.Add(setting);
+            }
         }
 
         await File.WriteAllTextAsync(

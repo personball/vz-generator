@@ -1,0 +1,24 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: {{clusterIssuer}} #zerossl-prod
+    # traefik.ingress.kubernetes.io/router.middlewares: default-redirect-https@kubernetescrd
+  name: {{name|kebab_case}}-ing
+  namespace: {{namespace}}
+spec:
+  tls:
+  - hosts:
+      - {{host}}
+    secretName: {{name|kebab_case}}-ing-tls
+  rules:
+  - host: {{host}}
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: {{name|kebab_case}}
+            port:
+              number: 80
