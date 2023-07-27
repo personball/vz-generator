@@ -8,8 +8,73 @@ public static class SamplesCollector
     {
         yield return AddVuePinia();
         yield return AddAbp();
+        yield return AddK8s();
         yield return AddSwagger2Api();
         // yield return AddSwagger2View();
+    }
+
+    // one sample, multi-options
+    public static Example AddK8s()
+    {
+        var k8sSample = new Example
+        {
+            Name = "k8s"
+        };
+
+        // option 1 
+        var setting = new GeneratorSetting
+        {
+            Option = "K8S-DeployWithService",
+            TemplatePath = Path.Combine(
+                ".",
+                VzConsts.ConfigRoot,
+                VzConsts.TemplateRoot,
+                VzConsts.SampleRoot,
+                "k8s",
+                "{{name___kebab_case}}-deployment.yaml"
+            ),
+            Output = Path.Combine(
+                ".",
+                "output",
+                "k8s",
+                "{{name___kebab_case}}")
+                .EnsureEndsWithDirectorySeparatorChar()
+        };
+
+        setting.Variables.Add(new TemplateVariable { Name = "name", Type = TemplateVariableType.String });
+        setting.Variables.Add(new TemplateVariable { Name = "namespace", Type = TemplateVariableType.String });
+        setting.Variables.Add(new TemplateVariable { Name = "image", Type = TemplateVariableType.String });
+        setting.Variables.Add(new TemplateVariable { Name = "port", Type = TemplateVariableType.String });
+
+        k8sSample.Settings.Add(setting);
+
+        // option 2
+        var setting2 = new GeneratorSetting
+        {
+            Option = "K8S-Ingress",
+            TemplatePath = Path.Combine(
+                ".",
+                VzConsts.ConfigRoot,
+                VzConsts.TemplateRoot,
+                VzConsts.SampleRoot,
+                "k8s",
+                "{{name___kebab_case}}-ing.yaml"
+            ),
+            Output = Path.Combine(
+                ".",
+                "output",
+                "k8s",
+                "{{name___kebab_case}}")
+                .EnsureEndsWithDirectorySeparatorChar()
+        };
+
+        setting2.Variables.Add(new TemplateVariable { Name = "name", Type = TemplateVariableType.String });
+        setting2.Variables.Add(new TemplateVariable { Name = "namespace", Type = TemplateVariableType.String });
+        setting2.Variables.Add(new TemplateVariable { Name = "host", Type = TemplateVariableType.String });
+        setting2.Variables.Add(new TemplateVariable { Name = "clusterIssuer", Type = TemplateVariableType.String });
+        k8sSample.Settings.Add(setting2);
+
+        return k8sSample;
     }
 
     public static Example AddVuePinia()
@@ -39,7 +104,7 @@ public static class SamplesCollector
         return new Example
         {
             Name = "vue.pinia",
-            Setting = setting
+            Settings = new List<GeneratorSetting> { setting }
         };
     }
 
@@ -67,7 +132,7 @@ public static class SamplesCollector
         return new Example
         {
             Name = "abp",
-            Setting = setting
+            Settings = new List<GeneratorSetting> { setting }
         };
     }
 
@@ -109,7 +174,7 @@ public static class SamplesCollector
         return new Example
         {
             Name = "swagger2api",
-            Setting = setting
+            Settings = new List<GeneratorSetting> { setting }
         };
     }
 
@@ -152,24 +217,7 @@ public static class SamplesCollector
         return new Example
         {
             Name = "swagger2view",
-            Setting = setting
+            Settings = new List<GeneratorSetting> { setting }
         };
-    }
-
-    private static string EnsureEndsWithDirectorySeparatorChar(this string path)
-    {
-        if (string.IsNullOrWhiteSpace(path))
-        {
-            throw new ArgumentNullException(nameof(path), "path should not empty!");
-        }
-
-        if (Path.EndsInDirectorySeparator(path))
-        {
-            return path;
-        }
-        else
-        {
-            return path + Path.DirectorySeparatorChar;
-        }
     }
 }

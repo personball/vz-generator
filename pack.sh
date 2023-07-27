@@ -2,6 +2,7 @@
 
 # rm -rf .vz
 rm -rf .vzx
+rm -rf output
 rm nupkg/*.nupkg
 
 rm Initializer/samples.zip

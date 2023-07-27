@@ -1,0 +1,54 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{name|kebab_case}}
+  namespace: {{namespace}}
+spec:
+  selector:
+    matchLabels:
+      app: {{name|kebab_case}}
+  replicas: 1 
+  template:
+    metadata:
+      labels:
+        app: {{name|kebab_case}} 
+    spec:
+      containers:
+      - name: {{name|kebab_case}}
+        image: {{image}}
+        # imagePullPolicy: Always
+        ports:
+        - containerPort: {{port}}
+        # volumeMounts:
+        #   - name: config
+        #     mountPath: /config
+        #     readOnly: true
+        # env:
+        #   - name: CONFIG_NAME
+        #     value: "value"
+      # volumes:
+      #   - name: config
+      #     projected:
+      #       sources:
+      #       - configMap:
+      #           name: config
+      #       - configMap:
+      #           name: config2
+  strategy: 
+    type: RollingUpdate 
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{name|kebab_case}}
+  namespace: {{namespace}}
+spec:
+  ports:
+    - name: {{name|kebab_case}}-port
+      protocol: TCP
+      port: 80
+      targetPort: {{port}}
+  selector:
+    app: {{name|kebab_case}}
+  type: ClusterIP  
