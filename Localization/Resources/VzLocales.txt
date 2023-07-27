@@ -23,6 +23,8 @@ GOptTplPathOptDesc=(Optional) specify file path of single template or directory 
 GOptSyntaxOptDesc=(Optional) specify syntax of template.
 GOptVarStringOptDesc=(Optional) fill value for string variables, --var key1=val1 --var key2=val2 can override default value of same key in the settings, will ask for missing variables.
 GOptVarJsonFileOptDesc=(Optional) fill file path for json variables， --var-json-file key1=./path/to/jsonfile --var-json-file key2=./path/to/jsonfile2 can override default value of same key in the settings, will ask for missing ones.
+GOptVarYamlFileOptDesc=(Optional) fill file path for yaml variables， --var-yaml-file key1=./path/to/yamlfile --var-yaml-file key2=./path/to/yamlfile2 can override default value of same key in the settings, will ask for missing ones.
+GOptVarYamlFileContentContainsMultiObject=Multiple objects (separated by '---') in one yaml file is invalid! To be a variable, every object should has its own name.
 GOptOutputOptDesc=(Optional) specify output path. can override the value in settings, if both not set, default is ./output。
 GOptOverrideOptDesc=(Optional) declare when output file exists, override it or not. True override it; False skip it; by default, will ask for decision of each file if not declared.
 GOptWatchOptDesc=(Optional) watch file changes in template folder, hot reload, render template in time (facilitate the development of templates). In watch mode, output always override exists files.
@@ -32,6 +34,7 @@ GFailedErrorResult=Generate Fail: {0}{1}{2}
 GSettingTemplatePathCliPrompt=Path of Template?
 GSettingTemplateVariableValueCliPrompt=Set value of {0}
 GSettingTemplateVariableValueForJsonFileCliPrompt=Set Json File Path of {0}
+GSettingTemplateVariableValueForYamlFileCliPrompt=Set Yaml File Path of {0}
 GSettingOutputCliPrompt=Path of Output?
 
 GSettingFileNotFound={0} Not Found! Please run init first!

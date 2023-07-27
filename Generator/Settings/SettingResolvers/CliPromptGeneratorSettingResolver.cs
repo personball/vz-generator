@@ -26,16 +26,23 @@ namespace vz_generator.Generator.Settings.SettingResolvers
 
             foreach (var item in context.Result.Variables.Where(v => string.IsNullOrWhiteSpace(v.DefaultValue)))
             {
-                if (item.Type == TemplateVariableType.String)
+                var promptMsg = $"Missing variable:{item.Name}";
+
+                switch (item.Type)
                 {
-                    item.DefaultValue = Prompt.Input<string>(
-                        VzLocales.L(VzLocales.Keys.GSettingTemplateVariableValueCliPrompt, item.Name));
+                    case TemplateVariableType.String:
+                        promptMsg = VzLocales.L(VzLocales.Keys.GSettingTemplateVariableValueCliPrompt, item.Name);
+                        break;
+                    case TemplateVariableType.JsonFile:
+                        promptMsg = VzLocales.L(VzLocales.Keys.GSettingTemplateVariableValueForJsonFileCliPrompt, item.Name);
+                        break;
+                    case TemplateVariableType.YamlFile:
+                        promptMsg = VzLocales.L(VzLocales.Keys.GSettingTemplateVariableValueForYamlFileCliPrompt, item.Name);
+                        break;
+                    default: break;
                 }
-                else
-                {
-                    item.DefaultValue = Prompt.Input<string>(
-                        VzLocales.L(VzLocales.Keys.GSettingTemplateVariableValueForJsonFileCliPrompt, item.Name));
-                }
+                
+                item.DefaultValue = Prompt.Input<string>(promptMsg);
             }
 
             if (string.IsNullOrWhiteSpace(context.Result.Output))

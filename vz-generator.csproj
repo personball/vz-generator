@@ -24,7 +24,8 @@
       v0.2.0 g command support -w to watch template folder;
       v0.2.1 update readme.md;
       v0.2.2 finish sample swagger2api;
-      v0.2.3 add sample k8s;bugfix:output to folder get access denied;  
+      v0.2.3 add sample k8s;bugfix:output to folder get access denied;
+      v0.2.4 TemplateVariableType.YamlFile support;
     </PackageReleaseNotes>
   </PropertyGroup>
 
@@ -35,6 +36,7 @@
     <PackageReference Include="Scriban" Version="5.7.0" />
     <PackageReference Include="Sharprompt" Version="2.4.5" />
     <PackageReference Include="System.CommandLine" Version="2.0.0-beta4.22272.1" />
+    <PackageReference Include="YamlDotNet" Version="13.1.1" />
   </ItemGroup>
 
   <ItemGroup>

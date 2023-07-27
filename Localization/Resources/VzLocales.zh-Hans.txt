@@ -23,6 +23,8 @@ GOptTplPathOptDesc=（可选）指定模板文件位置，可以是一个目录�
 GOptSyntaxOptDesc=指定模板语法，默认为 Liquid, 其他模板引擎待开发。
 GOptVarStringOptDesc=（可选）指定变量键值, --var key1=val1 --var key2=val2 可以覆盖配置文件中的默认配置，若未完全覆盖，则会有交互提示输入。
 GOptVarJsonFileOptDesc=（可选）指定变量键值来自一个json文件， --var-json-file key1=./path/to/jsonfile --var-json-file key2=./path/to/jsonfile2 可以覆盖配置文件中的默认配置，若未完全覆盖，则会有交互提示输入。
+GOptVarYamlFileOptDesc=（可选）指定变量键值来自一个yaml文件， --var-yaml-file key1=./path/to/yamlfile --var-yaml-file key2=./path/to/yamlfile2 可以覆盖配置文件中的默认配置，若未完全覆盖，则会有交互提示输入。
+GOptVarYamlFileContentContainsMultiObject=单个 Yaml 文件中不允许包含多个对象（由'---'分隔）！作为变量，每个对象应该有自己的变量名。
 GOptOutputOptDesc=（可选）输出结果到指定位置。未指定则按配置文件执行，配置文件中未配置，则默认输出到./output。
 GOptOverrideOptDesc=（可选）输出文件如果已存在，是否覆盖。true 全部覆盖；false 全部跳过；默认会逐个提示。
 GOptWatchOptDesc=(可选) 是否监视模板文件的变更, 热重载, 及时渲染模板 (促进模板的编写)。在本模式下，输出始终覆盖已存在文件。
@@ -32,6 +34,7 @@ GFailedErrorResult=生成失败: {0}{1}{2}
 GSettingTemplatePathCliPrompt=请输入模板路径
 GSettingTemplateVariableValueCliPrompt=请为变量 {0} 赋值
 GSettingTemplateVariableValueForJsonFileCliPrompt=请为 Json 变量 {0} 指定路径
+GSettingTemplateVariableValueForYamlFileCliPrompt=请为 Yaml 变量 {0} 指定路径
 GSettingOutputCliPrompt=请指定输出路径
 
 GSettingFileNotFound={0} 不存在! 请先执行 init 命令进行初始化!

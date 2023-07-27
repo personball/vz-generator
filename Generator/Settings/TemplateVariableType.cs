@@ -8,6 +8,8 @@ public enum TemplateVariableType
     String = 0,
 
     JsonFile = 1,
-    // JsonFileUri = 2
+
+    YamlFile = 2,
+    // JsonFileUri 
 }
 // TODO: load json from uri

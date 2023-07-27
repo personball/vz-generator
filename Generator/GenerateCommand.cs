@@ -31,6 +31,7 @@ public sealed class GenerateCommand : Command
         // yield return SyntaxOpt;
         yield return VarStringOpt;
         yield return VarJsonFileOpt;
+        yield return VarYamlFileOpt;
         yield return OutputOpt;
         yield return OverrideOpt;
         yield return WatchOpt;
@@ -59,6 +60,12 @@ public sealed class GenerateCommand : Command
     public static Option<Dictionary<string, FileInfo>> VarJsonFileOpt = new Option<Dictionary<string, FileInfo>>(
         aliases: new string[] { "--var-json-file" },
         description: VzLocales.L(VzLocales.Keys.GOptVarJsonFileOptDesc),
+        parseArgument: result => result.Tokens.Select(t => t.Value.Split('=')).ToDictionary(p => p[0], p => new FileInfo(p[1]))
+    );
+
+    public static Option<Dictionary<string, FileInfo>> VarYamlFileOpt = new Option<Dictionary<string, FileInfo>>(
+        aliases: new string[] { "--var-yaml-file" },
+        description: VzLocales.L(VzLocales.Keys.GOptVarYamlFileOptDesc),
         parseArgument: result => result.Tokens.Select(t => t.Value.Split('=')).ToDictionary(p => p[0], p => new FileInfo(p[1]))
     );
 

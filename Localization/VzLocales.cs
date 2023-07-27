@@ -32,17 +32,18 @@ public static class VzLocales
         public const string GOptSyntaxOptDesc = nameof(GOptSyntaxOptDesc);
         public const string GOptVarStringOptDesc = nameof(GOptVarStringOptDesc);
         public const string GOptVarJsonFileOptDesc = nameof(GOptVarJsonFileOptDesc);
+        public const string GOptVarYamlFileOptDesc = nameof(GOptVarYamlFileOptDesc);
+        public const string GOptVarYamlFileContentContainsMultiObject = nameof(GOptVarYamlFileContentContainsMultiObject);
         public const string GOptOutputOptDesc = nameof(GOptOutputOptDesc);
         public const string GOptOverrideOptDesc = nameof(GOptOverrideOptDesc);
         public const string GOptWatchOptDesc = nameof(GOptWatchOptDesc);
-
-
 
         public const string GFailedErrorResult = nameof(GFailedErrorResult);
 
         public const string GSettingTemplatePathCliPrompt = nameof(GSettingTemplatePathCliPrompt);
         public const string GSettingTemplateVariableValueCliPrompt = nameof(GSettingTemplateVariableValueCliPrompt);
         public const string GSettingTemplateVariableValueForJsonFileCliPrompt = nameof(GSettingTemplateVariableValueForJsonFileCliPrompt);
+        public const string GSettingTemplateVariableValueForYamlFileCliPrompt = nameof(GSettingTemplateVariableValueForYamlFileCliPrompt);
         public const string GSettingOutputCliPrompt = nameof(GSettingOutputCliPrompt);
 
         public const string GSettingFileNotFound = nameof(GSettingFileNotFound);
