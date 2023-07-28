@@ -1,0 +1,42 @@
+stages:
+  - build
+  - deploy
+
+build-job:
+  only: 
+    - main # dev tags
+  stage: build
+  image: docker:20.10.16
+  variables:
+    DOCKER_HOST: tcp://docker:2376
+    DOCKER_TLS_CERTDIR: "/certs"
+    DOCKER_TLS_VERIFY: 1
+    DOCKER_CERT_PATH: "$DOCKER_TLS_CERTDIR/client"
+  services:
+    - name: docker:20.10.16-dind
+      command: ["--registry-mirror","https://kobfrfwn.mirror.aliyuncs.com","--registry-mirror","https://hub-mirror.c.163.com","--registry-mirror","https://mirror.ccs.tencentyun.com"]   #通过command可以配置额外参数。
+  before_script:
+    - docker info
+    - echo "${CI_JOB_TOKEN}" | docker login {{registry}} --username gitlab-ci-token --password-stdin
+  script:
+    - docker build -t {{registry}}/{{project}}:{{tag}} . --network=host
+    # - docker build --build-arg buildEnv=prod -t {{registry}}/{{project}}:${CI_COMMIT_TAG} .  --network=host
+    - docker push {{registry}}/{{project}}:{{tag}}  
+
+deploy-job:
+  only:
+    - main # dev tags
+  stage: deploy 
+  environment: {{env}}
+  image:
+    name: bitnami/kubectl:latest
+    entrypoint: ['']
+  script:
+    - kubectl config get-contexts
+    - kubectl config use-context {{context}}
+    - kubectl get pods
+    - kubectl -n {{namespace}} set env deployments {{name}}-deployment build_version=$(date "+%Y%m%d%H%M%S")
+    # - kubectl -n {{namespace}} set image deployment/{{name}}-deployment {{name}}={{registry}}/{{project}}:${CI_COMMIT_TAG} 
+    - echo "Application successfully deployed."
+
+# {{env}} -----------end------
