@@ -15,6 +15,7 @@ public static class VzConsts
     public static class GenerateCmd
     {
         public const string Name = "generate";
+        public const string Alias = "g";
         public const string SettingFileName = Name + ".settings.json";
         public const string SettingSchemaFileName = Name + ".settings.schema.json";
     }
@@ -22,5 +23,11 @@ public static class VzConsts
     public static class InitCmd
     {
         public const string Name = "init";
+    }
+
+    public static class RenameCmd
+    {
+        public const string Name = "rename";
+        public const string Alias = "rn";
     }
 }

@@ -13,7 +13,7 @@ public sealed class GenerateCommand : Command
 {
     public GenerateCommand() : base(VzConsts.GenerateCmd.Name, VzLocales.L(VzLocales.Keys.GenerateCommandDesc))
     {
-        foreach (var opt in Options())
+        foreach (var opt in Opts())
         {
             AddOption(opt);
         }
@@ -23,7 +23,7 @@ public sealed class GenerateCommand : Command
     /// options to override settings
     /// </summary>
     /// <returns></returns>
-    protected static IEnumerable<Option> Options()
+    protected static IEnumerable<Option> Opts()
     {
         yield return ConfigOpt;
         yield return SelectOpt;
@@ -36,57 +36,57 @@ public sealed class GenerateCommand : Command
         yield return OverrideOpt;
         yield return WatchOpt;
     }
-    public static Option<FileInfo> ConfigOpt = new Option<FileInfo>(
+    public static Option<FileInfo> ConfigOpt = new(
         aliases: new string[] { "--config", "-c" },
         description: VzLocales.L(VzLocales.Keys.GOptConfigOptDesc));
 
-    public static Option<FileSystemInfo> OutputOpt = new Option<FileSystemInfo>(
+    public static Option<FileSystemInfo> OutputOpt = new(
         aliases: new string[] { "--output", "-o" },
         description: VzLocales.L(VzLocales.Keys.GOptOutputOptDesc)
     );
 
-    public static Option<bool?> OverrideOpt = new Option<bool?>(
+    public static Option<bool?> OverrideOpt = new(
         name: "--override",
         description: VzLocales.L(VzLocales.Keys.GOptOverrideOptDesc),
         getDefaultValue: () => (bool?)null
     );
 
-    public static Option<Dictionary<string, string>> VarStringOpt = new Option<Dictionary<string, string>>(
+    public static Option<Dictionary<string, string>> VarStringOpt = new(
         aliases: new string[] { "--var" },
         description: VzLocales.L(VzLocales.Keys.GOptVarStringOptDesc),
         parseArgument: result => result.Tokens.Select(t => t.Value.Split('=')).ToDictionary(p => p[0], p => p[1])
     );
 
-    public static Option<Dictionary<string, FileInfo>> VarJsonFileOpt = new Option<Dictionary<string, FileInfo>>(
+    public static Option<Dictionary<string, FileInfo>> VarJsonFileOpt = new(
         aliases: new string[] { "--var-json-file" },
         description: VzLocales.L(VzLocales.Keys.GOptVarJsonFileOptDesc),
         parseArgument: result => result.Tokens.Select(t => t.Value.Split('=')).ToDictionary(p => p[0], p => new FileInfo(p[1]))
     );
 
-    public static Option<Dictionary<string, FileInfo>> VarYamlFileOpt = new Option<Dictionary<string, FileInfo>>(
+    public static Option<Dictionary<string, FileInfo>> VarYamlFileOpt = new(
         aliases: new string[] { "--var-yaml-file" },
         description: VzLocales.L(VzLocales.Keys.GOptVarYamlFileOptDesc),
         parseArgument: result => result.Tokens.Select(t => t.Value.Split('=')).ToDictionary(p => p[0], p => new FileInfo(p[1]))
     );
 
-    public static Option<FileSystemInfo> TplPathOpt = new Option<FileSystemInfo>(
+    public static Option<FileSystemInfo> TplPathOpt = new(
         aliases: new string[] { "--template", "-t" },
         description: VzLocales.L(VzLocales.Keys.GOptTplPathOptDesc)
     );
     // TODO: 当指定 argument 作为模板内容时，忽略本选项。
 
-    public static Option<TemplateSyntax> SyntaxOpt = new Option<TemplateSyntax>(
+    public static Option<TemplateSyntax> SyntaxOpt = new(
         aliases: new string[] { "--syntax", "-s" },
         description: VzLocales.L(VzLocales.Keys.GOptSyntaxOptDesc),
         getDefaultValue: () => TemplateSyntax.Liquid
     );
 
-    public static Option<string> SelectOpt = new Option<string>(
+    public static Option<string> SelectOpt = new(
         aliases: new string[] { "--option", "-p" },
         description: VzLocales.L(VzLocales.Keys.GOptSelectOptDesc)
     );
 
-    public static Option<bool> WatchOpt = new Option<bool>(
+    public static Option<bool> WatchOpt = new(
         aliases: new string[] { "--watch", "-w" },
         description: VzLocales.L(VzLocales.Keys.GOptWatchOptDesc),
         getDefaultValue: () => false
@@ -94,7 +94,7 @@ public sealed class GenerateCommand : Command
 
     // TODO: 完全忽略配置，不指定option，从标准输入(argument.0)接收模板内容（仅支持单个文件）
 
-    private FileSystemWatcher TemplateWatcher = null;
+    private static FileSystemWatcher? TemplateWatcher;
 
     public async Task GenerateAsync(InvocationContext context)
     {

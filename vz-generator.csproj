@@ -17,8 +17,9 @@
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <Description> A CLI Tool for File Generate with templates. </Description>
-    <Version>0.2.5</Version>
+    <Version>0.2.6</Version>
     <PackageReleaseNotes>
+      v0.2.6 add rename subcommand;
       v0.2.5 add gitlab sample; k8s sample add init website option;
       v0.2.4 TemplateVariableType.YamlFile support;
       v0.2.3 add sample k8s;bugfix:output to folder get access denied;

@@ -11,8 +11,9 @@
             "preLaunchTask": "build",
             // If you have changed target frameworks, make sure to update the program path.
             "program": "${workspaceFolder}/bin/Debug/net7.0/vz-generator.dll",
-            "args": ["g","-w","-c",".vzx/generate.settings.json","-p","K8S-DeployWithService","--var","name=image-proxy","--var","namespace=devops","--var","port=8080"],
-            // "args":["init","--with-sample","k8s"],
+            // "args": ["g","-w","-c",".vzx/generate.settings.json","-p","K8S-DeployWithService","--var","name=image-proxy","--var","namespace=devops","--var","port=8080"],
+            // "args":["rn",".vz","-r","vz=vzx","-r","project=name"],
+            "args":["init"],
             "cwd": "${workspaceFolder}",
             // For more information about the 'console' field, see https://aka.ms/VSCode-CS-LaunchJson-Console
             "console": "integratedTerminal",//"internalConsole",

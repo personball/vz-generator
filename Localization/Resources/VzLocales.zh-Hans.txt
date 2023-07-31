@@ -42,3 +42,15 @@ GSettingFileContentIsEmpty=配置内容为空，请先更新 {0}
 GSettingOptionNotFound=提示: 选项 <{0}> 不存在...
 GSettingOptionChoosePrompt=请选择 (Use ↑↓)
 GSettingOptionNotFoundError=选项 <{0}> 不存在!
+
+# Renamer
+RenameCommandDesc=用指定的键值对，重命名文件或目录以及文件内容。
+RTargetArgDesc=要处理的文件或目录。
+ROptSkipContentOptDesc=（可选）是否跳过文件内容处理。
+ROptReplacePairsOptDesc=指定用于替换的键值对。 --replace key=value --replace key2=value2 会将 key 替换为 value，将 key2 替换为 value2. 
+ROptOutputOptDesc=指定输出目录。当要处理的 <target> 为目录时，总会在目标目录下创建一个形式为 <target目录名进行替换后> 的子目录。
+ROptOverrideOptDesc=（可选）输出文件如果已存在，是否覆盖。true 全部覆盖；false 全部跳过；默认会逐个提示。
+RenameFailedErrorResult=重命名失败：{0}{1}{2}
+RenameTargetNotFoundPrompt={0} 不存在！
+RenameOutputIsTargetPrompt=输出目录不可以和要处理的目标目录完全一样！
+RenameReplacePairsOptNotFoundPrompt=未指定要替换的关键词键值对，无事发生。

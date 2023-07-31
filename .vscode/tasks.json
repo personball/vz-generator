@@ -11,11 +11,11 @@
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
-            // "dependsOn": [ // comment dependsOn when debug g subcommand
-            //     "clean .vzx",
-            //     "zip samples",
-            //     "update locales" // comment this line on windows
-            //     ], 
+            "dependsOn": [ // comment dependsOn when debug g subcommand
+                "clean .vzx",
+                "zip samples",
+                "update locales" // comment this line on windows
+                ], 
             "problemMatcher": "$msCompile"
         },
         {

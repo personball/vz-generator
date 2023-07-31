@@ -18,33 +18,29 @@ public sealed class InitCommand : Command
     public InitCommand()
         : base(VzConsts.InitCmd.Name, VzLocales.L(VzLocales.Keys.InitCommandDesc))
     {
-        foreach (var opt in Options())
+        foreach (var opt in Opts())
         {
             AddOption(opt);
         }
     }
 
-    /// <summary>
-    /// option to specify samples to init
-    /// </summary>
-    /// <returns></returns>
-    public static IEnumerable<Option> Options()
+    public static IEnumerable<Option> Opts()
     {
-        yield return withSample;
-        yield return listSamples;
+        yield return WithSampleOpt;
+        yield return ListSamplesOpt;
     }
 
-    private static Option<bool> listSamples = new Option<bool>(
+    private static readonly Option<bool> ListSamplesOpt = new(
         name: "--list-samples",
         description: VzLocales.L(VzLocales.Keys.InitOptListSampleDesc),
         getDefaultValue: () => false);
-    private static Option<string[]> withSample = new Option<string[]>(
+    private static readonly Option<string[]> WithSampleOpt = new(
         name: "--with-sample",
         description: VzLocales.L(VzLocales.Keys.InitOptWithSampleDesc));
 
-    public async Task InitAsync(InvocationContext context)
+    public static async Task InitAsync(InvocationContext context)
     {
-        var doList = context.ParseResult.GetValueForOption(listSamples);
+        var doList = context.ParseResult.GetValueForOption(ListSamplesOpt);
         if (doList)
         {
             foreach (var item in SamplesCollector.GetExamples())
@@ -66,7 +62,7 @@ public sealed class InitCommand : Command
         var vscodePath = CreateDirectoryIfNotExists(currentPath, VsCodeSettings.ConfigPath);
         await SettingSchemas.SetupVsCodeAsync(vscodePath, context);
         // 按需导出 samples （导出模板到 templates samples 目录下，同时添加相应的示例 option 到 generate.settings.json）
-        var withSamples = context.ParseResult.GetValueForOption(withSample);
+        var withSamples = context.ParseResult.GetValueForOption(WithSampleOpt);
         var examples = SamplesCollector.GetExamples();
         if (withSamples != null && withSamples.Any())
         {
@@ -130,7 +126,7 @@ public sealed class InitCommand : Command
             Encoding.UTF8);
     }
 
-    private string CreateDirectoryIfNotExists(params string[] paths)
+    private static string CreateDirectoryIfNotExists(params string[] paths)
     {
         var path = Path.Combine(paths);
         if (!Directory.Exists(path))

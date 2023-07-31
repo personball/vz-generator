@@ -20,6 +20,20 @@ public static class VzLocales
 
         public const string VsCodeSettingsFileExistsPrompt = nameof(VsCodeSettingsFileExistsPrompt);
 
+        // Renamer
+        public const string RenameCommandDesc = nameof(RenameCommandDesc);
+        public const string RTargetArgDesc = nameof(RTargetArgDesc);
+        public const string ROptSkipContentOptDesc = nameof(ROptSkipContentOptDesc);
+        public const string ROptReplacePairsOptDesc = nameof(ROptReplacePairsOptDesc);
+        public const string ROptOutputOptDesc = nameof(ROptOutputOptDesc);
+        public const string ROptOverrideOptDesc = nameof(ROptOverrideOptDesc);
+        public const string RenameFailedErrorResult = nameof(RenameFailedErrorResult);
+
+        public const string RenameTargetNotFoundPrompt = nameof(RenameTargetNotFoundPrompt);
+        public const string RenameOutputIsTargetPrompt = nameof(RenameOutputIsTargetPrompt);
+        public const string RenameReplacePairsOptNotFoundPrompt = nameof(RenameReplacePairsOptNotFoundPrompt);
+
+
         // Generator
         public const string GenerateCommandDesc = nameof(GenerateCommandDesc);
         public const string GTemplateFileNotFoundPrompt = nameof(GTemplateFileNotFoundPrompt);

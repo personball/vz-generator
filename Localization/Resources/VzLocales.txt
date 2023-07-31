@@ -42,3 +42,15 @@ GSettingFileContentIsEmpty=Settings Not Found, please update {0}
 GSettingOptionNotFound=WARN: option <{0}> Not Found...
 GSettingOptionChoosePrompt=Choose One (Use ↑↓)
 GSettingOptionNotFoundError=Option <{0}> Not Found!
+
+# Renamer
+RenameCommandDesc=Rename file/path and replace file content with specific key-value pairs.
+RTargetArgDesc=File/folder to deal with.
+ROptSkipContentOptDesc=(Optional) Specify skip deal with file content.
+ROptReplacePairsOptDesc=Specify key value pairs to be replaced. --replace key=value --replace key2=value2 will replace key with value, replace key2 with value2. 
+ROptOutputOptDesc=Specify the output folder, always create a subfolder in form: <replace name of target> 
+ROptOverrideOptDesc=(Optional) declare when output file exists, override it or not. True override it; False skip it; by default, will ask for decision of each file if not declared.
+RenameFailedErrorResult=Rename Fail: {0}{1}{2}
+RenameTargetNotFoundPrompt={0} Not Found!
+RenameOutputIsTargetPrompt=Output path should not same as target!
+RenameReplacePairsOptNotFoundPrompt=No key value pairs specified, nothing happened.
