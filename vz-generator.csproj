@@ -10,7 +10,6 @@
     <PackAsTool>true</PackAsTool>
     <PackageOutputPath>./nupkg</PackageOutputPath>
     <ToolCommandName>vz</ToolCommandName>
-    <Version>0.2.3</Version>
     <Authors>personball</Authors>
     <PackageProjectUrl>https://github.com/personball/vz-generator</PackageProjectUrl>
     <RepositoryUrl>https://github.com/personball/vz-generator</RepositoryUrl>
@@ -18,13 +17,13 @@
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <Description> A CLI Tool for File Generate with templates. </Description>
+    <Version>0.2.6</Version>
     <PackageReleaseNotes>
-      v0.1.0 publish to nuget.org;
-      v0.1.1 clean samples;
-      v0.2.0 g command support -w to watch template folder;
-      v0.2.1 update readme.md;
-      v0.2.2 finish sample swagger2api;
-      v0.2.3 add sample k8s;bugfix:output to folder get access denied;  
+      v0.2.6 add rename subcommand;
+      v0.2.5 add gitlab sample; k8s sample add init website option;
+      v0.2.4 TemplateVariableType.YamlFile support;
+      v0.2.3 add sample k8s;bugfix:output to folder get access denied;
+      v0.2.2 finish sample swagger2api。
     </PackageReleaseNotes>
   </PropertyGroup>
 
@@ -35,6 +34,7 @@
     <PackageReference Include="Scriban" Version="5.7.0" />
     <PackageReference Include="Sharprompt" Version="2.4.5" />
     <PackageReference Include="System.CommandLine" Version="2.0.0-beta4.22272.1" />
+    <PackageReference Include="YamlDotNet" Version="13.1.1" />
   </ItemGroup>
 
   <ItemGroup>

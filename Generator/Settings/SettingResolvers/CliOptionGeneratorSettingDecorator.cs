@@ -1,3 +1,5 @@
+using System.CommandLine;
+
 using vz_generator.Commands;
 using vz_generator.Commands.Settings;
 
@@ -31,7 +33,6 @@ public class CliOptionGeneratorSettingDecorator : IGeneratorSettingResolver
         await _inner.ResolveAsync(context);
 
         // override by cli options
-
         // variables merge 同名覆盖，不存在则添加
         var vars = context.InvocationContext.ParseResult.GetValueForOption(GenerateCommand.VarStringOpt) ?? new Dictionary<string, string>();
         foreach (var item in vars)
@@ -53,26 +54,9 @@ public class CliOptionGeneratorSettingDecorator : IGeneratorSettingResolver
             }
         }
 
-        var jsons = context.InvocationContext.ParseResult.GetValueForOption(GenerateCommand.VarJsonFileOpt) ?? new Dictionary<string, FileInfo>();
-        foreach (var item in jsons)
-        {
-            var entry = context.Result.Variables.FirstOrDefault(v => v.Type == TemplateVariableType.JsonFile && v.Name == item.Key);
-            if (entry == null)
-            {
-                context.Result.Variables.Add(
-                    new TemplateVariable
-                    {
-                        Name = item.Key,
-                        DefaultValue = item.Value.FullName,
-                        Type = TemplateVariableType.JsonFile
-                    }
-                );
-            }
-            else
-            {
-                entry.DefaultValue = item.Value.FullName;
-            }
-        }
+        OverrideVariablesFileInfoIfExists(context,GenerateCommand.VarJsonFileOpt, TemplateVariableType.JsonFile);
+
+        OverrideVariablesFileInfoIfExists(context,GenerateCommand.VarYamlFileOpt, TemplateVariableType.YamlFile);
 
         // templatePath 有则覆盖
         var tplPath = context.InvocationContext.ParseResult.GetValueForOption(GenerateCommand.TplPathOpt);
@@ -86,6 +70,30 @@ public class CliOptionGeneratorSettingDecorator : IGeneratorSettingResolver
         if (output != null)
         {
             context.Result.Output = output.FullName;
+        }
+    }
+
+    private void OverrideVariablesFileInfoIfExists(ResolveContext context, Option<Dictionary<string, FileInfo>> opt, TemplateVariableType variableType)
+    {
+        var jsons = context.InvocationContext.ParseResult.GetValueForOption(opt) ?? new Dictionary<string, FileInfo>();
+        foreach (var item in jsons)
+        {
+            var entry = context.Result.Variables.FirstOrDefault(v => v.Type == variableType && v.Name == item.Key);
+            if (entry == null)
+            {
+                context.Result.Variables.Add(
+                    new TemplateVariable
+                    {
+                        Name = item.Key,
+                        DefaultValue = item.Value.FullName,
+                        Type = variableType
+                    }
+                );
+            }
+            else
+            {
+                entry.DefaultValue = item.Value.FullName;
+            }
         }
     }
 }

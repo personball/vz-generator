@@ -1,5 +1,6 @@
 using System.CommandLine.Invocation;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 
 using Scriban;
 using Scriban.Runtime;
@@ -11,9 +12,11 @@ using vz_generator.Commands.Settings;
 using vz_generator.Generator.Liquid.Scriban;
 using vz_generator.Localization;
 
+using YamlDotNet.Serialization;
+
 namespace vz_generator.Generator.Liquid;
 
-public class LiquidTemplateExecutor
+public partial class LiquidTemplateExecutor
 {
     private readonly GeneratorSetting _setting;
     private readonly InvocationContext _context;
@@ -52,6 +55,42 @@ public class LiquidTemplateExecutor
 
                     var text = await file.OpenText().ReadToEndAsync();
                     using var json = JsonDocument.Parse(text);
+                    variableObj.Add(item.Name, ConvertFromJson(json.RootElement));
+                }
+
+                if (item.Type == TemplateVariableType.YamlFile)
+                {
+                    var file = new FileInfo(item.DefaultValue);
+                    if (!file.Exists)
+                    {
+                        throw new ArgumentNullException("--var-yaml-file", $"{item.DefaultValue} Not Found!");
+                    }
+
+                    var text = await file.OpenText().ReadToEndAsync();
+                    // validate yaml content if multi object separate with ---
+                    var lines = text.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+                    if (lines.Any() && lines.Length > 1)
+                    {
+                        var remainLines = lines;
+                        var firstLine = lines.First();
+                        if (YamlObjectSeparatorRegex().IsMatch(firstLine))
+                        {
+                            remainLines = lines.Skip(1).ToArray();
+                        }
+
+                        if (remainLines.Any(s => YamlObjectSeparatorRegex().IsMatch(s)))
+                        {
+                            throw new ArgumentNullException("--var-yaml-file",
+                                VzLocales.L(
+                                    VzLocales.Keys.GOptVarYamlFileContentContainsMultiObject));
+                        }
+                    }
+
+                    var yamlDeserializer = new DeserializerBuilder().Build();
+                    var yamlObject = yamlDeserializer.Deserialize(new StringReader(text));
+                    var yamlSerializer = new SerializerBuilder().JsonCompatible().Build();
+
+                    using var json = JsonDocument.Parse(yamlSerializer.Serialize(yamlObject));
                     variableObj.Add(item.Name, ConvertFromJson(json.RootElement));
                 }
             }
@@ -262,4 +301,7 @@ public class LiquidTemplateExecutor
     }
     private static readonly object BoolTrue = true;
     private static readonly object BoolFalse = false;
+
+    [GeneratedRegex("^[-]{3,}")]
+    private static partial Regex YamlObjectSeparatorRegex();
 }
