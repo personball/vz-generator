@@ -27,6 +27,13 @@ public static class VzLocales
         public const string ROptReplacePairsOptDesc = nameof(ROptReplacePairsOptDesc);
         public const string ROptOutputOptDesc = nameof(ROptOutputOptDesc);
         public const string ROptOverrideOptDesc = nameof(ROptOverrideOptDesc);
+        public const string ROptIncludeOptDesc = nameof(ROptIncludeOptDesc);
+        public const string ROptIncludeExtOptDesc = nameof(ROptIncludeExtOptDesc);
+        public const string ROptExcludeOptDesc = nameof(ROptExcludeOptDesc);
+        public const string ROptExcludeExtOptDesc = nameof(ROptExcludeExtOptDesc);
+        
+        public const string ROptAllFilesOptDesc = nameof(ROptAllFilesOptDesc);
+
         public const string RenameFailedErrorResult = nameof(RenameFailedErrorResult);
 
         public const string RenameTargetNotFoundPrompt = nameof(RenameTargetNotFoundPrompt);

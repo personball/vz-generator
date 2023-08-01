@@ -17,8 +17,9 @@
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <Description> A CLI Tool for File Generate with templates. </Description>
-    <Version>0.2.6</Version>
+    <Version>0.2.7</Version>
     <PackageReleaseNotes>
+      v0.2.7 add file filter options for rename subcommand; add process bar for rename;
       v0.2.6 add rename subcommand;
       v0.2.5 add gitlab sample; k8s sample add init website option;
       v0.2.4 TemplateVariableType.YamlFile support;
@@ -33,6 +34,7 @@
     <PackageReference Include="Pluralize.NET.Core" Version="1.0.0" />
     <PackageReference Include="Scriban" Version="5.7.0" />
     <PackageReference Include="Sharprompt" Version="2.4.5" />
+    <PackageReference Include="ShellProgressBar" Version="5.2.0" />
     <PackageReference Include="System.CommandLine" Version="2.0.0-beta4.22272.1" />
     <PackageReference Include="YamlDotNet" Version="13.1.1" />
   </ItemGroup>
