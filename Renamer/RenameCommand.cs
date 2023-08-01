@@ -4,6 +4,8 @@ using System.Text.Json;
 
 using Sharprompt;
 
+using ShellProgressBar;
+
 using vz_generator.Localization;
 
 namespace vz_generator.Renamer;
@@ -176,6 +178,7 @@ public sealed class RenameCommand : Command
             var exts = fromFiles.Select(f => f.Extension).Distinct().ToList();
             context.Console.Out.Write(JsonSerializer.Serialize(exts));
 
+            using var pbar = new ProgressBar(fromFiles.Count, "Working...");
             // 重命名目录、重命名文件名、替换文件内容
             foreach (var fromFile in fromFiles)
             {
@@ -189,6 +192,8 @@ public sealed class RenameCommand : Command
                                         string.Empty)
                                     .ReplaceAsSpan(replacers));
                 await WriteToFileAsync(fromFile, replacers, skipContent, fileOverride, toFile);
+
+                pbar.Tick($"{toFile} finished.");
             }
         }
 
