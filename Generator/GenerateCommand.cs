@@ -23,7 +23,7 @@ public sealed class GenerateCommand : Command
     /// options to override settings
     /// </summary>
     /// <returns></returns>
-    protected static IEnumerable<Option> Opts()
+    private static IEnumerable<Option> Opts()
     {
         yield return ConfigOpt;
         yield return SelectOpt;

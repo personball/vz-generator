@@ -47,7 +47,7 @@ public partial class LiquidTemplateExecutor
                 if (item.Type == TemplateVariableType.JsonFile)
                 {
                     // load json file as dynamic object
-                    var file = new FileInfo(item.DefaultValue);// TODO: verify 绝对路径？相对路径？
+                    var file = new FileInfo(item.DefaultValue!);// TODO: verify 绝对路径？相对路径？
                     if (!file.Exists)
                     {
                         throw new ArgumentNullException("--var-json-file", $"{item.DefaultValue} Not Found!");
@@ -60,7 +60,7 @@ public partial class LiquidTemplateExecutor
 
                 if (item.Type == TemplateVariableType.YamlFile)
                 {
-                    var file = new FileInfo(item.DefaultValue);
+                    var file = new FileInfo(item.DefaultValue!);
                     if (!file.Exists)
                     {
                         throw new ArgumentNullException("--var-yaml-file", $"{item.DefaultValue} Not Found!");
