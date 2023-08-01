@@ -1,5 +1,6 @@
 using System.CommandLine;
 using System.CommandLine.Invocation;
+using System.Text.Json;
 
 using Sharprompt;
 
@@ -12,25 +13,30 @@ public sealed class RenameCommand : Command
     public RenameCommand()
         : base(VzConsts.RenameCmd.Name, VzLocales.L(VzLocales.Keys.RenameCommandDesc))
     {
-        AddArgument(renameTargetArg);
+        AddArgument(RenameTargetArg);
 
-        foreach (var opt in Options())
+        foreach (var opt in Opts())
         {
             AddOption(opt);
         }
     }
 
-    private static Argument<FileSystemInfo> renameTargetArg = new Argument<FileSystemInfo>(
+    private static readonly Argument<FileSystemInfo> RenameTargetArg = new Argument<FileSystemInfo>(
         name: "target",
         description: VzLocales.L(VzLocales.Keys.RTargetArgDesc)
     );
 
-    public static IEnumerable<Option> Options()
+    public static IEnumerable<Option> Opts()
     {
         yield return SkipContentOpt;
         yield return ReplacePairsOpt;
         yield return OutputOpt;
         yield return OverrideOpt;
+        yield return IncludeOpt;
+        yield return IncludeExtOpt;
+        yield return ExcludeOpt;
+        yield return ExcludeExtOpt;
+        yield return AllFilesOpt;
     }
 
     private static readonly Option<bool> SkipContentOpt = new(
@@ -56,6 +62,34 @@ public sealed class RenameCommand : Command
         getDefaultValue: () => (bool?)null
     );
 
+    private static readonly Option<bool> AllFilesOpt = new(
+        name: "--all",
+        description: VzLocales.L(VzLocales.Keys.ROptAllFilesOptDesc),
+        getDefaultValue: () => false
+    );
+
+    private static readonly Option<List<string>> IncludeOpt = new(
+        name: "--include",
+        description: VzLocales.L(VzLocales.Keys.ROptIncludeOptDesc)
+    );
+
+    private static readonly Option<List<string>> ExcludeOpt = new(
+       name: "--exclude",
+       description: VzLocales.L(VzLocales.Keys.ROptExcludeOptDesc)
+   );
+
+    private static readonly Option<List<string>> IncludeExtOpt = new(
+        name: "--include-ext",
+        description: VzLocales.L(VzLocales.Keys.ROptIncludeExtOptDesc),
+        parseArgument: result => result.Tokens.Select(t => t.Value.StartsWith('.') ? t.Value : ('.' + t.Value)).ToList()
+    );
+
+    private static readonly Option<List<string>> ExcludeExtOpt = new(
+        name: "--exclude-ext",
+        description: VzLocales.L(VzLocales.Keys.ROptExcludeExtOptDesc),
+        parseArgument: result => result.Tokens.Select(t => t.Value.StartsWith('.') ? t.Value : ('.' + t.Value)).ToList()
+    );
+
     // TODO: --no-copy? 需要文件系统事务性操作支持。
     public async Task RenameAsync(InvocationContext context)
     {
@@ -78,7 +112,7 @@ public sealed class RenameCommand : Command
 
     private async Task RenameInternalAsync(InvocationContext context)
     {
-        var target = context.ParseResult.GetValueForArgument(renameTargetArg);
+        var target = context.ParseResult.GetValueForArgument(RenameTargetArg);
         if (!target.Exists)
         {
             throw new ArgumentNullException(
@@ -115,7 +149,32 @@ public sealed class RenameCommand : Command
             }
 
             var fromFiles = new List<FileInfo>();
-            CollecteFromFiles((DirectoryInfo)target, outputDirectory, fromFiles);
+            CollecteFromFiles((DirectoryInfo)target, outputDirectory, fromFiles, files =>
+            {
+                var all = context.ParseResult.GetValueForOption(AllFilesOpt);
+                if (all)
+                {
+                    return files;
+                }
+
+                var included = context.ParseResult.GetValueForOption(IncludeOpt) ?? new List<string>();
+                included.AddRange(DefaultIncluded);
+                var includedExts = context.ParseResult.GetValueForOption(IncludeExtOpt) ?? new List<string>();
+                includedExts.AddRange(DefaultIncludedExts);
+                var excluded = context.ParseResult.GetValueForOption(ExcludeOpt) ?? new List<string>();
+                var excludedExts = context.ParseResult.GetValueForOption(ExcludeExtOpt) ?? new List<string>();
+
+                return files
+                            .Where(f =>
+                                included.Any(e => string.Equals(e, f.Name, StringComparison.OrdinalIgnoreCase))
+                                || includedExts.Any(e => string.Equals(e, f.Extension, StringComparison.OrdinalIgnoreCase)))
+                            .Where(f =>
+                                !excluded.Any(e => string.Equals(e, f.Name, StringComparison.OrdinalIgnoreCase))
+                                && !excludedExts.Any(e => string.Equals(e, f.Extension, StringComparison.OrdinalIgnoreCase)));
+            });
+
+            var exts = fromFiles.Select(f => f.Extension).Distinct().ToList();
+            context.Console.Out.Write(JsonSerializer.Serialize(exts));
 
             // 重命名目录、重命名文件名、替换文件内容
             foreach (var fromFile in fromFiles)
@@ -150,10 +209,41 @@ public sealed class RenameCommand : Command
             });
         }
     }
+    private static readonly string[] DefaultIncluded = new[]{
+"dockerfile"
+};
+    private static readonly string[] DefaultIncludedExts = new[]{
+".coffee",
+".config",
+".cs",
+".cshtml",
+".csproj",
+".DOCS",
+".DotSettings",
+".DS_Store",
+".editorconfig",
+".gitignore",
+".html",
+".js",
+".json",
+".Makefile",
+".markdown",
+".md",
+".nuspec",
+".props",
+".ps1",
+".sh",
+".sln",
+".ts",
+".txt",
+".xaml",
+".xml",
+".yml",
+};
 
-    private void CollecteFromFiles(DirectoryInfo target, DirectoryInfo outputRoot, List<FileInfo> fromFiles)
+    private void CollecteFromFiles(DirectoryInfo target, DirectoryInfo outputRoot, List<FileInfo> fromFiles, Func<IEnumerable<FileInfo>, IEnumerable<FileInfo>> fileFilter)
     {
-        fromFiles.AddRange(target.GetFiles());
+        fromFiles.AddRange(fileFilter(target.GetFiles()));
 
         foreach (var item in target.GetDirectories())
         {
@@ -163,7 +253,7 @@ public sealed class RenameCommand : Command
                 continue;
             }
 
-            CollecteFromFiles(item, outputRoot, fromFiles);
+            CollecteFromFiles(item, outputRoot, fromFiles, fileFilter);
         }
     }
 
