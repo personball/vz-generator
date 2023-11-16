@@ -106,7 +106,7 @@ public sealed class RenameCommand : Command
 #else
             context.Console.Error.Write(
                     VzLocales.L(
-                        VzLocales.Keys.RenameFailedErrorResult, ex.Message, Environment.NewLine, ex.StackTrace));
+                        VzLocales.Keys.RenameFailedErrorResult, ex.Message, Environment.NewLine, ex.StackTrace ?? ""));
             context.ExitCode = 2;
 #endif
         }

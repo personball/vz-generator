@@ -162,7 +162,7 @@ public sealed class GenerateCommand : Command
 #else
                 context.Console.Error.Write(
                     VzLocales.L(
-                        VzLocales.Keys.GFailedErrorResult, ex.Message, Environment.NewLine, ex.StackTrace));
+                        VzLocales.Keys.GFailedErrorResult, ex.Message, Environment.NewLine, ex.StackTrace ?? ""));
                 context.ExitCode = 2;
 #endif
             }
@@ -206,14 +206,14 @@ public sealed class GenerateCommand : Command
 
             throw new NotImplementedException();
         }
-        catch (System.Exception ex)
+        catch (Exception ex)
         {
 #if DEBUG
             Console.WriteLine($"Generate Fail: {ex.Message}{Environment.NewLine}");
 #else
             context.Console.Error.Write(
                 VzLocales.L(
-                    VzLocales.Keys.GFailedErrorResult, ex.Message, Environment.NewLine, ex.StackTrace));
+                    VzLocales.Keys.GFailedErrorResult, ex.Message, Environment.NewLine, ex.StackTrace ?? ""));
             context.ExitCode = 2;
 #endif
         }
