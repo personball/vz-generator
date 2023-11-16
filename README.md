@@ -30,12 +30,12 @@ After init, please see options in `.vz/generate.settings.json`
 
 ## Settings
 
-TODO syntax liquid help
+TODO syntax liquid help  
 
-TODO tpl path to output path
-TODO file to file
-TODO file to folder
-TODO folder to folder
+TODO tpl path to output path  
+TODO file to file  
+TODO file to folder  
+TODO folder to folder  
 
 ## Template Syntax
 
