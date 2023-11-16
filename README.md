@@ -86,6 +86,17 @@ Follow the Usage `vz g -h`.
 
 Be FREE to submit (PRs) your own templates as default samples (for any languages any scenarios) which may helpful to others.
 
+## Setup Git Hook to format commit msg
+
+Auto tag and generate changelog.md by `commit-and-tag-version`
+[conventional commits](https://www.conventionalcommits.org/en/v1.0.0/#summary)
+
+```bash
+./set-git-hook.sh
+npm i -g commit-and-tag-version # https://github.com/absolute-version/commit-and-tag-version#bumpfiles-packagefiles-and-updaters
+commit-and-tag-version # --frist-release
+```
+
 ## Develop on MacOS
 
 IDE: VS Code

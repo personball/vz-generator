@@ -1,0 +1,14 @@
+{
+    "packageFiles": [
+        {
+            "filename": "vz_generator.csproj",
+            "type": "csproj"
+        }
+    ],
+    "bumpFiles": [
+        {
+            "filename": "vz_generator.csproj",
+            "type": "csproj"
+        }
+    ]
+}
