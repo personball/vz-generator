@@ -1,11 +1,8 @@
 using System.CommandLine;
 using System.CommandLine.Invocation;
 using System.Text.Json;
-
 using Sharprompt;
-
 using ShellProgressBar;
-
 using vz_generator.Localization;
 
 namespace vz_generator.Renamer;
@@ -99,7 +96,7 @@ public sealed class RenameCommand : Command
         {
             await RenameInternalAsync(context);
         }
-        catch (System.Exception ex)
+        catch (Exception ex)
         {
 #if DEBUG
             Console.WriteLine($"Rename Fail:{ex.Message},{Environment.NewLine}");
@@ -218,6 +215,7 @@ public sealed class RenameCommand : Command
 "dockerfile"
 };
     private static readonly string[] DefaultIncludedExts = new[]{
+".astro",
 ".coffee",
 ".config",
 ".cs",
@@ -231,6 +229,7 @@ public sealed class RenameCommand : Command
 ".html",
 ".js",
 ".json",
+".jsx",
 ".Makefile",
 ".markdown",
 ".md",
@@ -239,8 +238,11 @@ public sealed class RenameCommand : Command
 ".ps1",
 ".sh",
 ".sln",
+".svelte",
 ".ts",
+".tsx",
 ".txt",
+".vue",
 ".xaml",
 ".xml",
 ".yml",
