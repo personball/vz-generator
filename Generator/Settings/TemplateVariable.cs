@@ -9,7 +9,7 @@ public class TemplateVariable
     /// </summary>
     /// <value></value>
     [Required]
-    public string Name { get; set; }
+    public string Name { get; set; } = string.Empty;
 
     /// <summary>
     /// String 类型直接输入；JsonFile 需要指定文件路径

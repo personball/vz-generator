@@ -105,19 +105,34 @@ public sealed class GenerateCommand : Command
 
         if (watched)
         {
+            if (!File.Exists(setting.TemplatePath) && !Directory.Exists(setting.TemplatePath))
+            {
+#if DEBUG
+                Console.WriteLine($"Watch {nameof(setting.TemplatePath)} Fail: {setting.TemplatePath} Not Exists!{Environment.NewLine}");
+#else
+                context.Console.Error.Write(
+                    VzLocales.L(
+                        VzLocales.Keys.GFailedErrorResult, 
+                        $"Watch {nameof(setting.TemplatePath)} Fail: {setting.TemplatePath} Not Exists!", "", Environment.NewLine));
+                context.ExitCode = 2;
+#endif
+                return;
+            }
+
             // keep running, timer
             var watchPath = Path.GetDirectoryName(setting.TemplatePath);
             context.Console.Write($"Start watching {watchPath} ...{Environment.NewLine}");
-            TemplateWatcher = new FileSystemWatcher(watchPath);
-
-            TemplateWatcher.NotifyFilter = NotifyFilters.Attributes
+            TemplateWatcher = new FileSystemWatcher(watchPath!)
+            {
+                NotifyFilter = NotifyFilters.Attributes
                                 | NotifyFilters.CreationTime
                                 | NotifyFilters.DirectoryName
                                 | NotifyFilters.FileName
                                 | NotifyFilters.LastAccess
                                 | NotifyFilters.LastWrite
                                 | NotifyFilters.Security
-                                | NotifyFilters.Size;
+                                | NotifyFilters.Size
+            };
 
             TemplateWatcher.Changed += OnChanged;
             TemplateWatcher.Created += OnChanged;
@@ -139,7 +154,7 @@ public sealed class GenerateCommand : Command
                 context.Console.Write($"completed in {stopWatch.ElapsedMilliseconds}ms.{Environment.NewLine}");
             }
 
-            async void OnError(object sender, ErrorEventArgs e)
+            void OnError(object sender, ErrorEventArgs e)
             {
                 var ex = e.GetException();
 #if DEBUG

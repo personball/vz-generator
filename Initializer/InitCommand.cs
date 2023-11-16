@@ -71,7 +71,7 @@ public sealed class InitCommand : Command
         // ./.vz/templates/samples/
         var sample_root = CreateDirectoryIfNotExists(templatesRoot, VzConsts.SampleRoot);
         // export sample templates
-        await SampleTemplatesExtractor.ExportAsync(sample_root, examples.Select(e => e.Name).ToArray());
+        SampleTemplatesExtractor.Export(sample_root, examples.Select(e => e.Name).ToArray());
 
         // 创建 generate.settings.json
         var generate_setting_path = Path.Combine(vzRoot, VzConsts.GenerateCmd.SettingFileName);

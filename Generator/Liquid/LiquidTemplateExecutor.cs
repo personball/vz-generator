@@ -160,7 +160,7 @@ public partial class LiquidTemplateExecutor
             var outputContent = tplContent.RenderContent(tplContext);
 
             // replace tplRoot with outputRoot
-            string outputFilePath = CalculateOutputFilePath(tplRoot, item.FullName, outputRoot, outputIsFile);
+            string outputFilePath = CalculateOutputFilePath(tplRoot!, item.FullName, outputRoot, outputIsFile);
             outputFilePath = outputFilePath.Replace("___", "|").RenderContent(tplContext);
 
             // output directory
@@ -241,7 +241,7 @@ public partial class LiquidTemplateExecutor
 
     // 转换 Json 对象为 IScriptObject
     // https://github.com/lunet-io/lunet/blob/54ed2989f92883d925f89b04f36366c229896fba/src/Lunet.Json/JsonUtil.cs#L62-L119
-    private static object ConvertFromJson(JsonElement element)
+    private static object? ConvertFromJson(JsonElement element)
     {
         switch (element.ValueKind)
         {

@@ -11,7 +11,7 @@ public class GeneratorSetting
     /// <value></value>
     [Required]
     [Description("Unique option name for CLI select.")]
-    public string Option { get; set; }
+    public string Option { get; set; } = string.Empty;
 
     /// <summary>
     /// Liquid or Razor
@@ -32,7 +32,7 @@ public class GeneratorSetting
     /// <value></value>
     [Required]
     [Description("Path for single template file or multi templates folder.")]
-    public string TemplatePath { get; set; }
+    public string TemplatePath { get; set; } = string.Empty;
 
     /// <summary>
     /// 变量名、类型、文件路径
@@ -56,7 +56,7 @@ public class GeneratorSetting
     /// </summary>
     /// <value></value>
     [Description("Path for output. If output is a directory, make sure ends with / or \\ .")]
-    public string Output { get; set; }
+    public string Output { get; set; } = string.Empty;
 
     /// <summary>
     /// 加载自定义函数、指令

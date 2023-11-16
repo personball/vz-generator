@@ -1,8 +1,11 @@
 using System.CommandLine;
 using System.CommandLine.Invocation;
 using System.Text.Json;
+
 using Sharprompt;
+
 using ShellProgressBar;
+
 using vz_generator.Localization;
 
 namespace vz_generator.Renamer;
@@ -133,14 +136,14 @@ public sealed class RenameCommand : Command
         if (!target.Attributes.HasFlag(FileAttributes.Directory))
         {
             // file to directory,无需处理目录名
-            var toFile = Path.Combine(output.FullName, target.Name.ReplaceAsSpan(replacers));
+            var toFile = Path.Combine(output!.FullName, target.Name.ReplaceAsSpan(replacers));
             await WriteToFileAsync(target, replacers, skipContent, fileOverride, toFile);
         }
         else
         {
             // directory to directory
             // d2d 总是加一级 outputRoot=output+target.Name
-            var outputRoot = Path.Combine(output.FullName, target.Name.ReplaceAsSpan(replacers));
+            var outputRoot = Path.Combine(output!.FullName, target.Name.ReplaceAsSpan(replacers));
             var outputDirectory = new DirectoryInfo(outputRoot);
             if (outputDirectory.FullName == target.FullName)
             {
@@ -194,7 +197,7 @@ public sealed class RenameCommand : Command
             }
         }
 
-        async Task WriteToFileAsync(FileSystemInfo target, Dictionary<string, string>? replacers, bool skipContent, bool? fileOverride, string toFile)
+        async Task WriteToFileAsync(FileSystemInfo target, Dictionary<string, string> replacers, bool skipContent, bool? fileOverride, string toFile)
         {
             await CopyFileWrapAsync(toFile, fileOverride, async () =>
             {
@@ -288,7 +291,7 @@ public sealed class RenameCommand : Command
         }
         else
         {
-            if (!to.Directory.Exists)
+            if (!to.Directory!.Exists)
             {
                 to.Directory.Create();
             }

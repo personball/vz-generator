@@ -11,11 +11,9 @@ public class ResolveContext
 
     public InvocationContext InvocationContext { get; }
 
-    public FileInfo SettingFilePath { get; set; }
+    public FileInfo? SettingFilePath { get; set; }
 
-    public List<GeneratorSetting> FileSettings { get; set; }
-
-    public GeneratorSetting OptionSetting { get; set; }
+    public List<GeneratorSetting>? FileSettings { get; set; }
 
     public string? SelectedOption { get; set; }
 

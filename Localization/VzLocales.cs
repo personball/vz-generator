@@ -31,7 +31,7 @@ public static class VzLocales
         public const string ROptIncludeExtOptDesc = nameof(ROptIncludeExtOptDesc);
         public const string ROptExcludeOptDesc = nameof(ROptExcludeOptDesc);
         public const string ROptExcludeExtOptDesc = nameof(ROptExcludeExtOptDesc);
-        
+
         public const string ROptAllFilesOptDesc = nameof(ROptAllFilesOptDesc);
 
         public const string RenameFailedErrorResult = nameof(RenameFailedErrorResult);
@@ -76,11 +76,13 @@ public static class VzLocales
 
     public static string L(string key, params string[] args)
     {
+        var text = Instance.GetString(key) ?? $"{key} Not Found!";
+
         if (args.Length > 0)
         {
-            return string.Format(Instance.GetString(key), args);
+            return string.Format(text, args);
         }
 
-        return Instance.GetString(key);
+        return text;
     }
 }
