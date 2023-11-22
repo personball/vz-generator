@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [1.2.0](https://github.com/personball/vz-generator/compare/v1.1.0-alpha.1...v1.2.0) (2023-11-22)
+
+
+### Features
+
+* **Renamer:** exclude files by .gitignore ([c963b64](https://github.com/personball/vz-generator/commit/c963b64b193fb9117b16fc0e1d049080ca1f4762))
+
+
+### Bug Fixes
+
+* **build:** fix warnings ([f040d0b](https://github.com/personball/vz-generator/commit/f040d0b6d6152ab859db0ceb1b04fb8c299574f7))
+
 ## [1.1.0-alpha.1](https://github.com/personball/vz-generator/compare/v1.1.0-alpha.0...v1.1.0-alpha.1) (2023-11-16)
 
 

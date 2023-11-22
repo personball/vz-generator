@@ -15,7 +15,7 @@
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <Description> A CLI Tool for File Generate with templates. </Description>
-    <Version>1.1.0-alpha.1</Version>
+    <Version>1.2.0</Version>
     <PackageReleaseNotes>
       v0.2.7 add file filter options for rename subcommand; add process bar for rename;
       v0.2.6 add rename subcommand;
