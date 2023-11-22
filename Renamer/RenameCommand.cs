@@ -2,7 +2,6 @@ using System.CommandLine;
 using System.CommandLine.Invocation;
 using System.CommandLine.IO;
 using System.Text;
-using System.Text.Json;
 
 using GitignoreParserNet;
 
@@ -38,10 +37,6 @@ public sealed class RenameCommand : Command
         yield return ReplacePairsOpt;
         yield return OutputOpt;
         yield return OverrideOpt;
-        yield return IncludeOpt;
-        yield return IncludeExtOpt;
-        yield return ExcludeOpt;
-        yield return ExcludeExtOpt;
         yield return ExcludePathPatternOpt;
         yield return ExcludeByGitignoreOpt;
         yield return AllFilesOpt;
@@ -76,28 +71,6 @@ public sealed class RenameCommand : Command
         getDefaultValue: () => false
     );
 
-    private static readonly Option<List<string>> IncludeOpt = new(
-        name: "--include",
-        description: VzLocales.L(VzLocales.Keys.ROptIncludeOptDesc)
-    );
-
-    private static readonly Option<List<string>> ExcludeOpt = new(
-       name: "--exclude",
-       description: VzLocales.L(VzLocales.Keys.ROptExcludeOptDesc)
-   );
-
-    private static readonly Option<List<string>> IncludeExtOpt = new(
-        name: "--include-ext",
-        description: VzLocales.L(VzLocales.Keys.ROptIncludeExtOptDesc),
-        parseArgument: result => result.Tokens.Select(t => t.Value.StartsWith('.') ? t.Value : ('.' + t.Value)).ToList()
-    );
-
-    private static readonly Option<List<string>> ExcludeExtOpt = new(
-        name: "--exclude-ext",
-        description: VzLocales.L(VzLocales.Keys.ROptExcludeExtOptDesc),
-        parseArgument: result => result.Tokens.Select(t => t.Value.StartsWith('.') ? t.Value : ('.' + t.Value)).ToList()
-    );
-
     private static readonly Option<List<string>> ExcludePathPatternOpt = new(
         aliases: ["--epp", "--exclude-path-pattern"],
         description: VzLocales.L(VzLocales.Keys.ROptExcludePathPatternDesc)
@@ -106,7 +79,7 @@ public sealed class RenameCommand : Command
     private static readonly Option<bool> ExcludeByGitignoreOpt = new(
         aliases: ["--gitignore", "--exclude-by-gitignore"],
         description: VzLocales.L(VzLocales.Keys.ROptExcludeByGitignoreDesc),
-        getDefaultValue: () => false
+        getDefaultValue: () => true
     );
 
     // TODO: --no-copy? 需要文件系统事务性操作支持。
@@ -170,75 +143,13 @@ public sealed class RenameCommand : Command
             var fromFiles = new List<FileInfo>();
             CollecteFromFiles((DirectoryInfo)target, outputDirectory, fromFiles, files =>
             {
-                var all = context.ParseResult.GetValueForOption(AllFilesOpt);
-                if (all)
-                {
-                    // TODO: BreakChange, deprecate include include-ext exclude exclude-ext, remove those default values, and set default --gitignore to true
-                    // 启用 --gitignore 选项的情况下，默认应该令 --all 为 false，令 --gitignore 为 true
-                    // 明确 --all 为true时，则 --gitignore 应失效
-                    // 现在临时兼容处理，原先选项生效之后，继续叠加 gitignore 规则
-                    return files;
-                }
-
-                var included = context.ParseResult.GetValueForOption(IncludeOpt) ?? new List<string>();
-                included.AddRange(DefaultIncluded);
-                var includedExts = context.ParseResult.GetValueForOption(IncludeExtOpt) ?? new List<string>();
-                includedExts.AddRange(DefaultIncludedExts);
-                var excluded = context.ParseResult.GetValueForOption(ExcludeOpt) ?? new List<string>();
-                var excludedExts = context.ParseResult.GetValueForOption(ExcludeExtOpt) ?? new List<string>();
-
-                var includedFiles = files
-                            .Where(f =>
-                                included.Any(e => string.Equals(e, f.Name, StringComparison.OrdinalIgnoreCase))
-                                || includedExts.Any(e => string.Equals(e, f.Extension, StringComparison.OrdinalIgnoreCase)))
-                            .Where(f =>
-                                !excluded.Any(e => string.Equals(e, f.Name, StringComparison.OrdinalIgnoreCase))
-                                && !excludedExts.Any(e => string.Equals(e, f.Extension, StringComparison.OrdinalIgnoreCase)));
-
-                return includedFiles;
+                return files;
             });
 
-            var exts = fromFiles.Select(f => f.Extension).Distinct().ToList();
-
-#if DEBUG
-            context.Console.Out.WriteLine(JsonSerializer.Serialize(exts) + $"{Environment.NewLine}Above Exts Processed!");
-#endif
-
-            var epp = context.ParseResult.GetValueForOption(ExcludePathPatternOpt);
-            var gitignore = context.ParseResult.GetValueForOption(ExcludeByGitignoreOpt);
-
-            if ((epp != null && epp.Any()) || gitignore)
+            var all = context.ParseResult.GetValueForOption(AllFilesOpt);
+            if (!all)
             {
-                var rules = string.Empty;
-
-                if (gitignore)
-                {
-                    var rulePath = Path.Combine(target.FullName, ".gitignore");
-                    if (File.Exists(rulePath))
-                    {
-                        rules += File.ReadAllText(rulePath, Encoding.UTF8);
-                    }
-                    else
-                    {
-#if DEBUG
-                        context.Console.WriteLine($"{rulePath} not Exists, .gitignore NOT loaded.");
-#endif
-                    }
-
-                    rules += $"{Environment.NewLine}.git/";
-                }
-
-                if (epp != null && epp.Any())
-                {
-                    foreach (var rule in epp)
-                    {
-                        rules += $"{Environment.NewLine}{rule}";
-                    }
-                }
-
-                var gitignoreParser = new GitignoreParser(rules);
-
-                fromFiles = fromFiles.Where(f => gitignoreParser.Accepts(f.FullName)).ToList();
+                fromFiles = ApplyGitIgnoreRules(fromFiles, target, context);
             }
 
             using var pbar = new ProgressBar(fromFiles.Count, "Working...");
@@ -277,42 +188,48 @@ public sealed class RenameCommand : Command
             });
         }
     }
-    private static readonly string[] DefaultIncluded = new[]{
-"dockerfile"
-};
-    private static readonly string[] DefaultIncludedExts = new[]{
-".astro",
-".coffee",
-".config",
-".cs",
-".cshtml",
-".csproj",
-".DOCS",
-".DotSettings",
-".DS_Store",
-".editorconfig",
-".gitignore",
-".html",
-".js",
-".json",
-".jsx",
-".Makefile",
-".markdown",
-".md",
-".nuspec",
-".props",
-".ps1",
-".sh",
-".sln",
-".svelte",
-".ts",
-".tsx",
-".txt",
-".vue",
-".xaml",
-".xml",
-".yml",
-};
+
+    private List<FileInfo> ApplyGitIgnoreRules(List<FileInfo> fromFiles, FileSystemInfo target, InvocationContext context)
+    {
+        var epp = context.ParseResult.GetValueForOption(ExcludePathPatternOpt);
+        var gitignore = context.ParseResult.GetValueForOption(ExcludeByGitignoreOpt);
+
+        if ((epp != null && epp.Any()) || gitignore)
+        {
+            var rules = string.Empty;
+
+            if (gitignore)
+            {
+                var rulePath = Path.Combine(target.FullName, ".gitignore");
+                if (File.Exists(rulePath))
+                {
+                    rules += File.ReadAllText(rulePath, Encoding.UTF8);
+                }
+                else
+                {
+#if DEBUG
+                    context.Console.WriteLine($"{rulePath} not Exists, .gitignore NOT loaded.");
+#endif
+                }
+
+                rules += $"{Environment.NewLine}.git/";
+            }
+
+            if (epp != null && epp.Any())
+            {
+                foreach (var rule in epp)
+                {
+                    rules += $"{Environment.NewLine}{rule}";
+                }
+            }
+
+            var gitignoreParser = new GitignoreParser(rules);
+
+            fromFiles = fromFiles.Where(f => gitignoreParser.Accepts(f.FullName)).ToList();
+        }
+
+        return fromFiles;
+    }
 
     private void CollecteFromFiles(DirectoryInfo target, DirectoryInfo outputRoot, List<FileInfo> fromFiles, Func<IEnumerable<FileInfo>, IEnumerable<FileInfo>> fileFilter)
     {
