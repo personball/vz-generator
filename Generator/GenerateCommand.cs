@@ -23,7 +23,7 @@ public sealed class GenerateCommand : Command
     /// options to override settings
     /// </summary>
     /// <returns></returns>
-    protected static IEnumerable<Option> Opts()
+    private static IEnumerable<Option> Opts()
     {
         yield return ConfigOpt;
         yield return SelectOpt;
@@ -105,19 +105,34 @@ public sealed class GenerateCommand : Command
 
         if (watched)
         {
+            if (!File.Exists(setting.TemplatePath) && !Directory.Exists(setting.TemplatePath))
+            {
+#if DEBUG
+                Console.WriteLine($"Watch {nameof(setting.TemplatePath)} Fail: {setting.TemplatePath} Not Exists!{Environment.NewLine}");
+#else
+                context.Console.Error.Write(
+                    VzLocales.L(
+                        VzLocales.Keys.GFailedErrorResult, 
+                        $"Watch {nameof(setting.TemplatePath)} Fail: {setting.TemplatePath} Not Exists!", "", Environment.NewLine));
+                context.ExitCode = 2;
+#endif
+                return;
+            }
+
             // keep running, timer
             var watchPath = Path.GetDirectoryName(setting.TemplatePath);
             context.Console.Write($"Start watching {watchPath} ...{Environment.NewLine}");
-            TemplateWatcher = new FileSystemWatcher(watchPath);
-
-            TemplateWatcher.NotifyFilter = NotifyFilters.Attributes
+            TemplateWatcher = new FileSystemWatcher(watchPath!)
+            {
+                NotifyFilter = NotifyFilters.Attributes
                                 | NotifyFilters.CreationTime
                                 | NotifyFilters.DirectoryName
                                 | NotifyFilters.FileName
                                 | NotifyFilters.LastAccess
                                 | NotifyFilters.LastWrite
                                 | NotifyFilters.Security
-                                | NotifyFilters.Size;
+                                | NotifyFilters.Size
+            };
 
             TemplateWatcher.Changed += OnChanged;
             TemplateWatcher.Created += OnChanged;
@@ -131,6 +146,7 @@ public sealed class GenerateCommand : Command
 
             async void OnChanged(object sender, FileSystemEventArgs e)
             {
+                // TODO: re-generating the Changed Files or directories only
                 context.Console.Write($"{e.FullPath} {e.ChangeType}. Re-generating...");
                 var stopWatch = Stopwatch.StartNew();
                 stopWatch.Start();
@@ -139,7 +155,7 @@ public sealed class GenerateCommand : Command
                 context.Console.Write($"completed in {stopWatch.ElapsedMilliseconds}ms.{Environment.NewLine}");
             }
 
-            async void OnError(object sender, ErrorEventArgs e)
+            void OnError(object sender, ErrorEventArgs e)
             {
                 var ex = e.GetException();
 #if DEBUG
@@ -147,7 +163,7 @@ public sealed class GenerateCommand : Command
 #else
                 context.Console.Error.Write(
                     VzLocales.L(
-                        VzLocales.Keys.GFailedErrorResult, ex.Message, Environment.NewLine, ex.StackTrace));
+                        VzLocales.Keys.GFailedErrorResult, ex.Message, Environment.NewLine, ex.StackTrace ?? ""));
                 context.ExitCode = 2;
 #endif
             }
@@ -191,14 +207,14 @@ public sealed class GenerateCommand : Command
 
             throw new NotImplementedException();
         }
-        catch (System.Exception ex)
+        catch (Exception ex)
         {
 #if DEBUG
             Console.WriteLine($"Generate Fail: {ex.Message}{Environment.NewLine}");
 #else
             context.Console.Error.Write(
                 VzLocales.L(
-                    VzLocales.Keys.GFailedErrorResult, ex.Message, Environment.NewLine, ex.StackTrace));
+                    VzLocales.Keys.GFailedErrorResult, ex.Message, Environment.NewLine, ex.StackTrace ?? ""));
             context.ExitCode = 2;
 #endif
         }

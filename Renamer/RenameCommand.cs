@@ -1,6 +1,10 @@
 using System.CommandLine;
 using System.CommandLine.Invocation;
+using System.CommandLine.IO;
+using System.Text;
 using System.Text.Json;
+
+using GitignoreParserNet;
 
 using Sharprompt;
 
@@ -38,6 +42,8 @@ public sealed class RenameCommand : Command
         yield return IncludeExtOpt;
         yield return ExcludeOpt;
         yield return ExcludeExtOpt;
+        yield return ExcludePathPatternOpt;
+        yield return ExcludeByGitignoreOpt;
         yield return AllFilesOpt;
     }
 
@@ -53,7 +59,7 @@ public sealed class RenameCommand : Command
         parseArgument: result => result.Tokens.Select(t => t.Value.Split('=')).ToDictionary(p => p[0], p => p[1]));
 
     private static readonly Option<DirectoryInfo> OutputOpt = new(
-        aliases: new string[] { "-o", "--output" },
+        aliases: ["-o", "--output"],
         description: VzLocales.L(VzLocales.Keys.ROptOutputOptDesc),
         getDefaultValue: () => new DirectoryInfo(".")
     );
@@ -92,6 +98,17 @@ public sealed class RenameCommand : Command
         parseArgument: result => result.Tokens.Select(t => t.Value.StartsWith('.') ? t.Value : ('.' + t.Value)).ToList()
     );
 
+    private static readonly Option<List<string>> ExcludePathPatternOpt = new(
+        aliases: ["--epp", "--exclude-path-pattern"],
+        description: VzLocales.L(VzLocales.Keys.ROptExcludePathPatternDesc)
+    );
+
+    private static readonly Option<bool> ExcludeByGitignoreOpt = new(
+        aliases: ["--gitignore", "--exclude-by-gitignore"],
+        description: VzLocales.L(VzLocales.Keys.ROptExcludeByGitignoreDesc),
+        getDefaultValue: () => false
+    );
+
     // TODO: --no-copy? 需要文件系统事务性操作支持。
     public async Task RenameAsync(InvocationContext context)
     {
@@ -99,14 +116,14 @@ public sealed class RenameCommand : Command
         {
             await RenameInternalAsync(context);
         }
-        catch (System.Exception ex)
+        catch (Exception ex)
         {
 #if DEBUG
             Console.WriteLine($"Rename Fail:{ex.Message},{Environment.NewLine}");
 #else
             context.Console.Error.Write(
                     VzLocales.L(
-                        VzLocales.Keys.RenameFailedErrorResult, ex.Message, Environment.NewLine, ex.StackTrace));
+                        VzLocales.Keys.RenameFailedErrorResult, ex.Message, Environment.NewLine, ex.StackTrace ?? ""));
             context.ExitCode = 2;
 #endif
         }
@@ -136,14 +153,14 @@ public sealed class RenameCommand : Command
         if (!target.Attributes.HasFlag(FileAttributes.Directory))
         {
             // file to directory,无需处理目录名
-            var toFile = Path.Combine(output.FullName, target.Name.ReplaceAsSpan(replacers));
+            var toFile = Path.Combine(output!.FullName, target.Name.ReplaceAsSpan(replacers));
             await WriteToFileAsync(target, replacers, skipContent, fileOverride, toFile);
         }
         else
         {
             // directory to directory
             // d2d 总是加一级 outputRoot=output+target.Name
-            var outputRoot = Path.Combine(output.FullName, target.Name.ReplaceAsSpan(replacers));
+            var outputRoot = Path.Combine(output!.FullName, target.Name.ReplaceAsSpan(replacers));
             var outputDirectory = new DirectoryInfo(outputRoot);
             if (outputDirectory.FullName == target.FullName)
             {
@@ -156,6 +173,10 @@ public sealed class RenameCommand : Command
                 var all = context.ParseResult.GetValueForOption(AllFilesOpt);
                 if (all)
                 {
+                    // TODO: BreakChange, deprecate include include-ext exclude exclude-ext, remove those default values, and set default --gitignore to true
+                    // 启用 --gitignore 选项的情况下，默认应该令 --all 为 false，令 --gitignore 为 true
+                    // 明确 --all 为true时，则 --gitignore 应失效
+                    // 现在临时兼容处理，原先选项生效之后，继续叠加 gitignore 规则
                     return files;
                 }
 
@@ -166,17 +187,59 @@ public sealed class RenameCommand : Command
                 var excluded = context.ParseResult.GetValueForOption(ExcludeOpt) ?? new List<string>();
                 var excludedExts = context.ParseResult.GetValueForOption(ExcludeExtOpt) ?? new List<string>();
 
-                return files
+                var includedFiles = files
                             .Where(f =>
                                 included.Any(e => string.Equals(e, f.Name, StringComparison.OrdinalIgnoreCase))
                                 || includedExts.Any(e => string.Equals(e, f.Extension, StringComparison.OrdinalIgnoreCase)))
                             .Where(f =>
                                 !excluded.Any(e => string.Equals(e, f.Name, StringComparison.OrdinalIgnoreCase))
                                 && !excludedExts.Any(e => string.Equals(e, f.Extension, StringComparison.OrdinalIgnoreCase)));
+
+                return includedFiles;
             });
 
             var exts = fromFiles.Select(f => f.Extension).Distinct().ToList();
-            context.Console.Out.Write(JsonSerializer.Serialize(exts));
+
+#if DEBUG
+            context.Console.Out.WriteLine(JsonSerializer.Serialize(exts) + $"{Environment.NewLine}Above Exts Processed!");
+#endif
+
+            var epp = context.ParseResult.GetValueForOption(ExcludePathPatternOpt);
+            var gitignore = context.ParseResult.GetValueForOption(ExcludeByGitignoreOpt);
+
+            if ((epp != null && epp.Any()) || gitignore)
+            {
+                var rules = string.Empty;
+
+                if (gitignore)
+                {
+                    var rulePath = Path.Combine(target.FullName, ".gitignore");
+                    if (File.Exists(rulePath))
+                    {
+                        rules += File.ReadAllText(rulePath, Encoding.UTF8);
+                    }
+                    else
+                    {
+#if DEBUG
+                        context.Console.WriteLine($"{rulePath} not Exists, .gitignore NOT loaded.");
+#endif
+                    }
+
+                    rules += $"{Environment.NewLine}.git/";
+                }
+
+                if (epp != null && epp.Any())
+                {
+                    foreach (var rule in epp)
+                    {
+                        rules += $"{Environment.NewLine}{rule}";
+                    }
+                }
+
+                var gitignoreParser = new GitignoreParser(rules);
+
+                fromFiles = fromFiles.Where(f => gitignoreParser.Accepts(f.FullName)).ToList();
+            }
 
             using var pbar = new ProgressBar(fromFiles.Count, "Working...");
             // 重命名目录、重命名文件名、替换文件内容
@@ -197,7 +260,7 @@ public sealed class RenameCommand : Command
             }
         }
 
-        async Task WriteToFileAsync(FileSystemInfo target, Dictionary<string, string>? replacers, bool skipContent, bool? fileOverride, string toFile)
+        async Task WriteToFileAsync(FileSystemInfo target, Dictionary<string, string> replacers, bool skipContent, bool? fileOverride, string toFile)
         {
             await CopyFileWrapAsync(toFile, fileOverride, async () =>
             {
@@ -218,6 +281,7 @@ public sealed class RenameCommand : Command
 "dockerfile"
 };
     private static readonly string[] DefaultIncludedExts = new[]{
+".astro",
 ".coffee",
 ".config",
 ".cs",
@@ -231,6 +295,7 @@ public sealed class RenameCommand : Command
 ".html",
 ".js",
 ".json",
+".jsx",
 ".Makefile",
 ".markdown",
 ".md",
@@ -239,8 +304,11 @@ public sealed class RenameCommand : Command
 ".ps1",
 ".sh",
 ".sln",
+".svelte",
 ".ts",
+".tsx",
 ".txt",
+".vue",
 ".xaml",
 ".xml",
 ".yml",
@@ -286,7 +354,7 @@ public sealed class RenameCommand : Command
         }
         else
         {
-            if (!to.Directory.Exists)
+            if (!to.Directory!.Exists)
             {
                 to.Directory.Create();
             }

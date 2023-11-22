@@ -54,8 +54,12 @@ RenameFailedErrorResult=重命名失败：{0}{1}{2}
 RenameTargetNotFoundPrompt={0} 不存在！
 RenameOutputIsTargetPrompt=输出目录不可以和要处理的目标目录完全一样！
 RenameReplacePairsOptNotFoundPrompt=未指定要替换的关键词键值对，无事发生。
-ROptIncludeOptDesc=包含指定文件名（不区分大小写）。 `dockerfile` 默认包含.
-ROptIncludeExtOptDesc=包含具有指定扩展名的文件，如 `.txt` `.sh`, `.` 可以忽略, --include-ext txt --include-ext sh, 默认包含扩展名:[".coffee",".config",".cs",".cshtml",".csproj",".DOCS",".DotSettings",".DS_Store",".editorconfig",".gitignore",".html",".js",".json",".Makefile",".markdown",".md",".nuspec",".props",".ps1",".sh",".sln",".ts",".txt",".xaml",".xml",".yml"] 
-ROptExcludeOptDesc=排除指定文件名（不区分大小写）。
-ROptExcludeExtOptDesc=排除带有指定扩展名的文件（不区分大小写），如 `.txt` `.sh`, `.` 可以忽略, --exclude-ext txt --exclude-ext sh 。
+
+ROptIncludeOptDesc=(弃用，默认遵循.gitignore规则)包含指定文件名（不区分大小写）。 `dockerfile` 默认包含.
+ROptIncludeExtOptDesc=(弃用，默认遵循.gitignore规则)包含具有指定扩展名的文件，如 `.txt` `.sh`, `.` 可以忽略, --include-ext txt --include-ext sh, 默认包含扩展名:[".coffee",".config",".cs",".cshtml",".csproj",".DOCS",".DotSettings",".DS_Store",".editorconfig",".gitignore",".html",".js",".json",".Makefile",".markdown",".md",".nuspec",".props",".ps1",".sh",".sln",".ts",".txt",".xaml",".xml",".yml"] 
+ROptExcludeOptDesc=(弃用，默认遵循.gitignore规则)排除指定文件名（不区分大小写）。
+ROptExcludeExtOptDesc=(弃用，默认遵循.gitignore规则)排除带有指定扩展名的文件（不区分大小写），如 `.txt` `.sh`, `.` 可以忽略, --exclude-ext txt --exclude-ext sh 。
+
 ROptAllFilesOptDesc=禁用文件过滤，忽略 --include --include-ext --exclude --exclude-ext 以及默认设置的文件名和扩展名列表，直接处理所有文件。
+ROptExcludePathPatternDesc=以 gitignore 的语法排除指定的文件, --exclude-path-pattern ".git/" --exclude-path-pattern "[Dd]esktop.ini", 会在 --include --exclude --include-ext --exclude-ext --all 之后应用 。
+ROptExcludeByGitignoreDesc=按 .gitignore 文件来排除文件，仅应用目标根目录下的 .gitignore 文件, 同时忽略 .git 目录, 会在 --include --exclude --include-ext --exclude-ext --all 之后应用 。

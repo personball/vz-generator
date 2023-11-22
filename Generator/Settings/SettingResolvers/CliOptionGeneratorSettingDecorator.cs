@@ -37,7 +37,7 @@ public class CliOptionGeneratorSettingDecorator : IGeneratorSettingResolver
         var vars = context.InvocationContext.ParseResult.GetValueForOption(GenerateCommand.VarStringOpt) ?? new Dictionary<string, string>();
         foreach (var item in vars)
         {
-            var entry = context.Result.Variables.FirstOrDefault(v => v.Type == TemplateVariableType.String && v.Name == item.Key);
+            var entry = context.Result!.Variables.FirstOrDefault(v => v.Type == TemplateVariableType.String && v.Name == item.Key);
             if (entry == null)
             {
                 context.Result.Variables.Add(
@@ -62,14 +62,14 @@ public class CliOptionGeneratorSettingDecorator : IGeneratorSettingResolver
         var tplPath = context.InvocationContext.ParseResult.GetValueForOption(GenerateCommand.TplPathOpt);
         if (tplPath != null)
         {
-            context.Result.TemplatePath = tplPath.FullName;
+            context.Result!.TemplatePath = tplPath.FullName;
         }
 
         // output 有则覆盖
         var output = context.InvocationContext.ParseResult.GetValueForOption(GenerateCommand.OutputOpt);
         if (output != null)
         {
-            context.Result.Output = output.FullName;
+            context.Result!.Output = output.FullName;
         }
     }
 
@@ -78,7 +78,7 @@ public class CliOptionGeneratorSettingDecorator : IGeneratorSettingResolver
         var jsons = context.InvocationContext.ParseResult.GetValueForOption(opt) ?? new Dictionary<string, FileInfo>();
         foreach (var item in jsons)
         {
-            var entry = context.Result.Variables.FirstOrDefault(v => v.Type == variableType && v.Name == item.Key);
+            var entry = context.Result!.Variables.FirstOrDefault(v => v.Type == variableType && v.Name == item.Key);
             if (entry == null)
             {
                 context.Result.Variables.Add(

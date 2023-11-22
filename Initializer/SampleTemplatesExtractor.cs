@@ -11,7 +11,7 @@ namespace vz_generator.Initializer
         // ZipEntry should not contans prefix like "Initializer" "Samples"
         public const string SamplesResourceName = "vz_generator.Initializer.samples.zip";
 
-        public static async Task ExportAsync(string extractToPath, string[] samples)
+        public static void Export(string extractToPath, string[] samples)
         {
             if (!samples.Any())
             {
@@ -21,9 +21,14 @@ namespace vz_generator.Initializer
             var assembly = Assembly.GetExecutingAssembly();
 
             using var stream = assembly.GetManifestResourceStream(SamplesResourceName);
+            if (stream == null)
+            {
+                return;
+            }
+
             using var archive = new ZipArchive(stream);
 
-            string CreateDirectoryIfNotExists(params string[] paths)
+            static string CreateDirectoryIfNotExists(params string[] paths)
             {
                 var path = Path.Combine(paths);
                 if (!Directory.Exists(path))

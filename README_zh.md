@@ -87,6 +87,17 @@ TODO folder to folder
 
 欢迎任何人 PR 提交可能对其他人有用的任何开发语言、任何场景的模板文件作为默认示例模板。
 
+## 设置 Git Hook 以统一提交日志格式便于自动生成更新日志
+
+自动打标签和生成变更日志 changelog.md by `commit-and-tag-version`
+[conventional commits](https://www.conventionalcommits.org/en/v1.0.0/#summary)
+
+```bash
+./set-git-hook.sh
+npm i -g commit-and-tag-version # https://github.com/absolute-version/commit-and-tag-version#bumpfiles-packagefiles-and-updaters
+commit-and-tag-version # --frist-release
+```
+
 ## Develop on MacOS
 
 IDE: VS Code

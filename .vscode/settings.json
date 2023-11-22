@@ -5,6 +5,12 @@
                 ".vz/generate.settings.json"
             ],
             "url": "./.vz/generate.settings.schema.json"
+        },
+        {
+            "fileMatch": [
+                ".versionrc"
+            ],
+            "url": "https://raw.githubusercontent.com/conventional-changelog/conventional-changelog-config-spec/master/versions/2.2.0/schema.json"
         }
     ]
 }

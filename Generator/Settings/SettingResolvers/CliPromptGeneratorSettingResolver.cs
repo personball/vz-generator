@@ -18,7 +18,7 @@ namespace vz_generator.Generator.Settings.SettingResolvers
         {
             await _inner.ResolveAsync(context);
 
-            if (string.IsNullOrWhiteSpace(context.Result.TemplatePath))
+            if (string.IsNullOrWhiteSpace(context.Result!.TemplatePath))
             {
                 context.Result.TemplatePath = Prompt.Input<string>(
                     VzLocales.L(VzLocales.Keys.GSettingTemplatePathCliPrompt));
