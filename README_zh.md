@@ -148,10 +148,10 @@ vz g -w
 
 ## Renamer
 
-`vz rn` subcommand can replace key/value in file content or file name or directory name.  
+`vz rn` 子命令可以对文件内容、文件名以及目录名进行键值对替换。  
 
 ``` bash
- vz rn ProjectName/ -r ProjectName=Demo -r CompanyName=Company # more options try: vz rn -h
+ vz rn ProjectName/ -r ProjectName=Demo -r CompanyName=Company # 更多命令选项请尝试: vz rn -h
 ```
 
 ## MIT
