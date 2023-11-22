@@ -8,96 +8,101 @@ This command is built following [dotnet core global tools](https://docs.microsof
 
 [中文版readme](README_zh.md)
 
-# Install
+## Install
 
-    dotnet tool install -g vz-generator
+```bash
+dotnet tool install -g vz-generator
+```
 
-# Usage
+## Usage
 
-## init to load settings and sample templates
+### init to load settings and sample templates
 
-    vz init 
+```bash
+vz init 
+```
 
 sample names:
 
-    vz init --list-samples
+```bash
+vz init --list-samples
+```
 
 only load specific sample:
 
-    vz init --with-sample abp --with-sample vue.pinia
+```bash
+vz init --with-sample abp --with-sample vue.pinia
+```
 
 After init, please see options in `.vz/generate.settings.json`
 
-## Settings
-
-TODO syntax liquid help  
-
-TODO tpl path to output path  
-TODO file to file  
-TODO file to folder  
-TODO folder to folder  
-
-## Template Syntax
+### Template Syntax
 
 The basic liquid syntax and builtin functions follow [Scriban](https://github.com/scriban/scriban/blob/master/doc/builtins.md#string-functions).
 
-**Notice**
+> **Notice**  
+>
+> As name of paths or files not allowed the char '|', so by convention, we use '___' instead of '|'.
 
-    As name of paths or files not allowed the char '|', so by convention, we use '___' instead of '|'.
+#### Extended naming functions
 
-### Extended naming functions
-
-``` liquid
- {{'nameIt'|pascal_case}} =>  NameIt 
- {{'NameIt'|camel_case}}  =>  nameIt 
- {{'NameIt'|kebab_case}}  =>  name-it 
- {{'NameIt'|snake_case}}  =>  name_it 
- {{'person'|pluralize}}   =>  people 
- {{'people'|singularize}} =>  person 
+```liquid
+{{'nameIt'|pascal_case}} =>  NameIt 
+{{'NameIt'|camel_case}}  =>  nameIt 
+{{'NameIt'|kebab_case}}  =>  name-it 
+{{'NameIt'|snake_case}}  =>  name_it 
+{{'person'|pluralize}}   =>  people 
+{{'people'|singularize}} =>  person 
 ```
 
-## Generate any files with subpaths as you want
+### Generate any files with subpaths as you want
 
-    vz g
+```bash
+vz g
+```
 
 By default, g(generate) subcommand will ask what option you want to run.
 
-You also can use `-p <your option in .vz/generate.settings.json>` to provide answer 
+You also can use `-p <your option in .vz/generate.settings.json>` to provide answer
 
-    vz g -p 'Create Abp'
+```bash
+vz g -p 'Create Abp'
+```
 
 It will continue to ask you for some other setting which not store in `.vz/generate.settings.json`, such as the value of the variables. Also, can be provided as below:
 
-    vz g -p 'Create Abp' --var project=MyCompany.MyProject --var entity=User
+```bash
+vz g -p 'Create Abp' --var project=MyCompany.MyProject --var entity=User
+```
 
-# vscode setup
+### vscode setup
 
 `vz init` will create `.vscode/settings.json` to associate `.vz/generate.settings.schema.json` with `.vz/generate.settings.json`. if `.vscode/settings.json` is already exists, it will not override it, and you should update the file yourself with the content it will show you.
 
-# Just do what you want.
+### Just do what you want
 
-Be free to modify the file `.vz/generate.settings.json`, `vz g` will search the templates as you specified, load variables as you declared, and output the generated files to where you specified.
+Be FREE to modify the file `.vz/generate.settings.json`, `vz g` will search the templates as you specified, load variables as you declared, and output the generated files to where you specified.
 
 Even `vz g -c <file path to your own settings.json>` can override the default path to `generate.settings.json`, but the content of it should match the schema as `.vz/generate.settings.schema.json` stored.
 
 Follow the Usage `vz g -h`.
 
-# Contribute
+## Contribute
 
 Be FREE to submit (PRs) your own templates as default samples (for any languages any scenarios) which may helpful to others.
 
-## Setup Git Hook to format commit msg
+### Setup Git Hook to format commit msg
 
 Auto tag and generate changelog.md by `commit-and-tag-version`
 [conventional commits](https://www.conventionalcommits.org/en/v1.0.0/#summary)
 
 ```bash
-./set-git-hook.sh
+ ./set-git-hook.sh
 npm i -g commit-and-tag-version # https://github.com/absolute-version/commit-and-tag-version#bumpfiles-packagefiles-and-updaters
 commit-and-tag-version # --frist-release
 ```
 
-## Develop on MacOS
+### Develop on MacOS
 
 IDE: VS Code
 
@@ -112,7 +117,7 @@ DEBUG mode will use `.vzx` instead of `.vz`
 
 All things work well.
 
-## Develop on windows
+### Develop on windows
 
 IDE: VS Code
 
@@ -127,21 +132,30 @@ DEBUG mode will use `.vzx` instead of `.vz`
   - should check `"args"` in `.vscode/launch.json`, and strings in it will treated as tokens (whitespace will not parsed).
   - should commented out the line `dependsOn` of `build` task in `.vscode/tasks.json`
 
+`resgen` maybe problem on windows when develop with pure dotnet core with vs code, but visual studio should work (not confrim).
 
-`resgen` maybe problem on windows when develop with pure dotnet core with vs code, but visual studio should work (not confrim). 
-
-## Template Development
+### Template Development
 
 the `-w` option of subommand `g`, will watch the folder which template files belong to, and regenerate the output in time. It facilitates the development of templates.
 
-    vz g -w 
+```bash
+vz g -w 
+```
 
 It will not watch the setting file, or ask you for any options or inputs again (only watch templates).  
 In `watch` mode, output always override exists files.
 
-# MIT
+## Renamer
 
-# References
+`vz rn` subcommand can replace key/value in file content or file name or directory name.  
+
+``` bash
+ vz rn ProjectName/ -r ProjectName=Demo -r CompanyName=Company # more options try: vz rn -h
+```
+
+## MIT
+
+## References
 
 - UseCases like [codeBelt/generate-template-files](https://github.com/codeBelt/generate-template-files), but here we got Liquid syntax for template files and paths.
 
