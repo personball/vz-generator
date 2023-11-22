@@ -17,12 +17,7 @@
     <Description> A CLI Tool for File Generate with templates. </Description>
     <Version>1.2.0</Version>
     <PackageReleaseNotes>
-      v0.2.7 add file filter options for rename subcommand; add process bar for rename;
-      v0.2.6 add rename subcommand;
-      v0.2.5 add gitlab sample; k8s sample add init website option;
-      v0.2.4 TemplateVariableType.YamlFile support;
-      v0.2.3 add sample k8s;bugfix:output to folder get access denied;
-      v0.2.2 finish sample swagger2api。
+      see https://github.com/personball/vz-generator/blob/master/CHANGELOG.md
     </PackageReleaseNotes>
     
   </PropertyGroup>
