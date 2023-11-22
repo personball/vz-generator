@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [2.0.0](https://github.com/personball/vz-generator/compare/v1.2.0...v2.0.0) (2023-11-22)
+
+
+### ⚠ BREAKING CHANGES
+
+* **Renamer:** remove deprecated file filter options.
+
+### Features
+
+* **Renamer:** set --gitignore default true ([d7c2fa7](https://github.com/personball/vz-generator/commit/d7c2fa70fcc07aee281966a5d9855a4695c05659))
+
 ## [1.2.0](https://github.com/personball/vz-generator/compare/v1.1.0-alpha.1...v1.2.0) (2023-11-22)
 
 
