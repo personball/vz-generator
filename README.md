@@ -132,7 +132,7 @@ DEBUG mode will use `.vzx` instead of `.vz`
   - should check `"args"` in `.vscode/launch.json`, and strings in it will treated as tokens (whitespace will not parsed).
   - should commented out the line `dependsOn` of `build` task in `.vscode/tasks.json`
 
-`resgen` maybe problem on windows when develop with pure dotnet core with vs code, but visual studio should work (not confrim).
+`resgen` maybe problem on windows when develop with pure dotnet core with vs code, but visual studio should work (not confirm).
 
 ### Template Development
 
