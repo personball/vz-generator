@@ -24,9 +24,11 @@
       v0.2.3 add sample k8s;bugfix:output to folder get access denied;
       v0.2.2 finish sample swagger2api。
     </PackageReleaseNotes>
+    
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="GitignoreParserNet" Version="0.2.0.10" />
     <PackageReference Include="JsonSchema.Net.Generation" Version="3.3.0" />
     <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="7.0.9" />
     <PackageReference Include="Pluralize.NET.Core" Version="1.0.0" />

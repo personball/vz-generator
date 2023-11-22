@@ -146,6 +146,7 @@ public sealed class GenerateCommand : Command
 
             async void OnChanged(object sender, FileSystemEventArgs e)
             {
+                // TODO: re-generating the Changed Files or directories only
                 context.Console.Write($"{e.FullPath} {e.ChangeType}. Re-generating...");
                 var stopWatch = Stopwatch.StartNew();
                 stopWatch.Start();

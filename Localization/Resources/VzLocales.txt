@@ -54,8 +54,12 @@ RenameFailedErrorResult=Rename Fail: {0}{1}{2}
 RenameTargetNotFoundPrompt={0} Not Found!
 RenameOutputIsTargetPrompt=Output path should not same as target!
 RenameReplacePairsOptNotFoundPrompt=No key value pairs specified, nothing happened.
-ROptIncludeOptDesc=include file name (case-insensitive). `dockerfile` is included by default.
-ROptIncludeExtOptDesc=include files with specific extension, like `.txt` `.sh`, the dot can ignore, --include-ext txt --include-ext sh , the default extensions:[".coffee",".config",".cs",".cshtml",".csproj",".DOCS",".DotSettings",".DS_Store",".editorconfig",".gitignore",".html",".js",".json",".Makefile",".markdown",".md",".nuspec",".props",".ps1",".sh",".sln",".ts",".txt",".xaml",".xml",".yml"] 
-ROptExcludeOptDesc=exclude file name (case-insensitive).
-ROptExcludeExtOptDesc=exclude files with specific extension, like `.txt` `.sh`, the dot can ignore, --exclude-ext txt --exclude-ext sh .
+
+ROptIncludeOptDesc=(deprecated,please follow .gitignore rules)include file name (case-insensitive). `dockerfile` is included by default.
+ROptIncludeExtOptDesc=(deprecated,please follow .gitignore rules)include files with specific extension, like `.txt` `.sh`, the dot can ignore, --include-ext txt --include-ext sh , the default extensions:[".coffee",".config",".cs",".cshtml",".csproj",".DOCS",".DotSettings",".DS_Store",".editorconfig",".gitignore",".html",".js",".json",".Makefile",".markdown",".md",".nuspec",".props",".ps1",".sh",".sln",".ts",".txt",".xaml",".xml",".yml"] 
+ROptExcludeOptDesc=(deprecated,please follow .gitignore rules)exclude file name (case-insensitive).
+ROptExcludeExtOptDesc=(deprecated,please follow .gitignore rules)exclude files with specific extension, like `.txt` `.sh`, the dot can ignore, --exclude-ext txt --exclude-ext sh .
+
 ROptAllFilesOptDesc=disable files filters, ignore --include --include-ext --exclude --exclude-ext and the default included file name or extensions, just deal all the files.
+ROptExcludePathPatternDesc=exclude files by git-ignore-like path pattern, --exclude-path-pattern ".git/" --exclude-path-pattern "[Dd]esktop.ini" , will be applied after --include --exclude --include-ext --exclude-ext.
+ROptExcludeByGitignoreDesc=exclude files by the root .gitignore file in target folder, will ignore .git/ folder, and be applied after --include --exclude --include-ext --exclude-ext.

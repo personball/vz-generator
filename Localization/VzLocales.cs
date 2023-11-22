@@ -31,6 +31,8 @@ public static class VzLocales
         public const string ROptIncludeExtOptDesc = nameof(ROptIncludeExtOptDesc);
         public const string ROptExcludeOptDesc = nameof(ROptExcludeOptDesc);
         public const string ROptExcludeExtOptDesc = nameof(ROptExcludeExtOptDesc);
+        public const string ROptExcludePathPatternDesc = nameof(ROptExcludePathPatternDesc);
+        public const string ROptExcludeByGitignoreDesc = nameof(ROptExcludeByGitignoreDesc);
 
         public const string ROptAllFilesOptDesc = nameof(ROptAllFilesOptDesc);
 
