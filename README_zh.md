@@ -8,23 +8,31 @@
 
 [English readme](README.md)
 
-# 安装
+## 安装
 
-    dotnet tool install -g vz-generator
+```bash
+dotnet tool install -g vz-generator
+```
 
-# 用法
+## 用法
 
-## 初始化默认配置和示例模板
+### 初始化默认配置和示例模板
 
-    vz init 
+```bash
+vz init 
+```
 
 查看示例名称列表:
 
-    vz init --list-samples
+```bash
+vz init --list-samples
+```
 
 仅加载指定的示例:
 
-    vz init --with-sample abp --with-sample vue.pinia
+```bash
+vz init --with-sample abp --with-sample vue.pinia
+```
 
 完成初始化后，请打开配置文件 `.vz/generate.settings.json` 查看或编辑可用选项。
 
@@ -32,25 +40,15 @@
 
 `vz init` 会创建 `.vscode/settings.json` 以关联 `.vz/generate.settings.schema.json` 和 `.vz/generate.settings.json`. 如果 `.vscode/settings.json` 已经存在，则不会覆盖它，那么你可以复制命令输出的内容自己编辑该文件。
 
-## Settings
-
-TODO path variable
-
-TODO tpl path to output path
-TODO file to file
-TODO file to folder
-TODO folder to folder
-
-## 模板语法
+### 模板语法
 
 基本的 liquid 语法和内置函数功能请查看 [Scriban](https://github.com/scriban/scriban/blob/master/doc/builtins.md#string-functions).
 
-**请注意**
+>**请注意**
+>
+> 由于文件名和路径名不允许出现'|', 故约定对于路径和文件名中需要'|'调用函数的地方，以三个下划线代替，即 '___' 会被替换为 '|'
 
-    由于文件名和路径名不允许出现'|', 故约定对于路径和文件名中需要'|'调用函数的地方，以三个下划线代替，即 '___' 会被替换为 '|'
-
-
-### 已扩展的命名相关函数
+#### 已扩展的命名相关函数
 
 ``` liquid
  {{'nameIt'|pascal_case}} =>  NameIt 
@@ -61,21 +59,27 @@ TODO folder to folder
  {{'people'|singularize}} =>  person 
 ```
 
-## 按你所需模板化生成多个文件以及相应子目录结构
+### 按你所需模板化生成多个文件以及相应子目录结构
 
-    vz g
+```bash
+vz g
+```
 
 默认情况下, g(generate) 子命令会交互式询问你需要执行哪套配置。
 
 你可以用 `-p <your option in .vz/generate.settings.json>` 选项来指定要执行的配置。 
 
-    vz g -p 'Create Abp'
+```bash
+vz g -p 'Create Abp'
+```
 
 命令会继续询问 `.vz/generate.settings.json` 配置文件中没有指定的内容，比如所声明变量的值， 也可以通过命令行选项 `--var` 提供，如下，可声明多次:
 
-    vz g -p 'Create Abp' --var project=MyCompany.MyProject --var entity=User
+```bash
+vz g -p 'Create Abp' --var project=MyCompany.MyProject --var entity=User
+```
 
-# Just do what you want.
+### Just do what you want.
 
 可以任意修改 `.vz/generate.settings.json` 配置文件的内容（只要符合`.vz/generate.settings.json` 的定义）, `vz g` 会加载你指定的模板（单个文件或整个目录）, 加载你声明的变量（以及对应的值，未提供则询问）, 最后输出所有文件到你指定的地方。
 
@@ -83,11 +87,11 @@ TODO folder to folder
 
 其他说明请查看 `vz g -h`.
 
-# 参与项目
+## 参与项目
 
 欢迎任何人 PR 提交可能对其他人有用的任何开发语言、任何场景的模板文件作为默认示例模板。
 
-## 设置 Git Hook 以统一提交日志格式便于自动生成更新日志
+### 设置 Git Hook 以统一提交日志格式便于自动生成更新日志
 
 自动打标签和生成变更日志 changelog.md by `commit-and-tag-version`
 [conventional commits](https://www.conventionalcommits.org/en/v1.0.0/#summary)
@@ -98,7 +102,7 @@ npm i -g commit-and-tag-version # https://github.com/absolute-version/commit-and
 commit-and-tag-version # --frist-release
 ```
 
-## Develop on MacOS
+### Develop on MacOS
 
 IDE: VS Code
 
@@ -113,7 +117,7 @@ DEBUG 模式下使用 `.vzx` 路径，而非 `.vz`。
 
 MacOS 是本项目的默认开发环境，所有默认配置基本可用。
 
-## Develop on windows
+### Develop on windows
 
 IDE: VS Code
 
@@ -131,18 +135,28 @@ DEBUG 模式下使用 `.vzx` 路径，而非 `.vz`。
 
 仅基于 dotnet core + vscode 的开发环境可能会遇到 `resgen` 命令无法使用的问题， visual studio 应支持，但未验证。
 
-## 模板开发
+### 模板开发
 
 子命令 `g` 的 `-w` 选项，会监控所指定模板目录的任何文件变更，并会及时重新渲染结果，这样可以方便模板的开发。
 
-    vz g -w 
+```bash
+vz g -w 
+```
 
 不过，这个选项并不会监控配置文件，也不会重新通过命令行交互提示你进行输入（仅针对模板文件的变更）。  
 在本模式下，输出始终覆盖已存在文件。
 
-# MIT
+## Renamer
 
-# 参考
+`vz rn` subcommand can replace key/value in file content or file name or directory name.  
+
+``` bash
+ vz rn ProjectName/ -r ProjectName=Demo -r CompanyName=Company # more options try: vz rn -h
+```
+
+## MIT
+
+## 参考
 
 - 用例类似 [codeBelt/generate-template-files](https://github.com/codeBelt/generate-template-files)，不过，这里引入了 Liquid 模板语法进行增强。
 
