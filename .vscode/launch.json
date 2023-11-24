@@ -5,14 +5,14 @@
             // Use IntelliSense to find out which attributes exist for C# debugging
             // Use hover for the description of the existing attributes
             // For further information visit https://github.com/dotnet/vscode-csharp/blob/main/debugger-launchjson.md
-            "name": "Rename Debug",
+            "name": "Debug",
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
             // If you have changed target frameworks, make sure to update the program path.
             "program": "${workspaceFolder}/bin/Debug/net8.0/vz-generator.dll",
-            // "args": ["g","-w","-c",".vzx/generate.settings.json","-p","K8S-DeployWithService","--var","name=image-proxy","--var","namespace=devops","--var","port=8080"],
-            "args":["rn","../../unity3d/ProjectName/","-r","CompanyName=Company","-r","ProjectName=Demo","-o","../../unity3d/"],
+            "args": ["g","-w","-c",".vzx/generate.settings.json","-p","K8S-DeployWithService","--var","name=image-proxy","--var","namespace=devops","--var","port=8080"],
+            // "args":["rn","../../unity3d/ProjectName/","-r","CompanyName=Company","-r","ProjectName=Demo","-o","../../unity3d/"],
             // "args":["init"],
             "cwd": "${workspaceFolder}",
             // For more information about the 'console' field, see https://aka.ms/VSCode-CS-LaunchJson-Console

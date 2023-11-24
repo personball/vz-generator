@@ -1,4 +1,5 @@
 using Panic.StringUtils;
+
 using Scriban.Runtime;
 
 namespace vz_generator.Generator.Liquid.Scriban;
@@ -17,6 +18,11 @@ public class VzStringUtils : ScriptObject
     /// <returns></returns>
     public static string PascalCase(string text)
     {
+        if (text == null)
+        {
+            return string.Empty;
+        }
+
         return StringUtils.ToPascalCase(text);
     }
 
@@ -32,6 +38,11 @@ public class VzStringUtils : ScriptObject
     /// <returns></returns>
     public static string CamelCase(string text)
     {
+        if (text == null)
+        {
+            return string.Empty;
+        }
+
         return StringUtils.ToCamelCase(text);
     }
 
@@ -47,6 +58,11 @@ public class VzStringUtils : ScriptObject
     /// <returns></returns>
     public static string KebabCase(string text)
     {
+        if (text == null)
+        {
+            return string.Empty;
+        }
+
         return StringUtils.ToKebabCase(text);
     }
 
@@ -62,6 +78,11 @@ public class VzStringUtils : ScriptObject
     /// <returns></returns>
     public static string SnakeCase(string text)
     {
+        if (text == null)
+        {
+            return string.Empty;
+        }
+
         return StringUtils.ToSnakeCase(text);
     }
 
@@ -77,6 +98,11 @@ public class VzStringUtils : ScriptObject
     /// <returns></returns>
     public static string Pluralize(string text)
     {
+        if (text == null)
+        {
+            return string.Empty;
+        }
+
         return PluralizerUtils.Pluralizer.Pluralize(text);
     }
 
@@ -92,6 +118,11 @@ public class VzStringUtils : ScriptObject
     /// <returns></returns>
     public static string Singularize(string text)
     {
+        if (text == null)
+        {
+            return string.Empty;
+        }
+        
         return PluralizerUtils.Pluralizer.Singularize(text);
     }
 }
