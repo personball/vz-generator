@@ -37,6 +37,7 @@
   <ItemGroup>
     <Compile Remove="Initializer\Samples\**\*" />
     <Compile Remove="output\**\*" />
+    <Compile Remove="Generator\Settings\Mermaid\*" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Localization\Resources\*.resources" />
