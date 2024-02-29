@@ -1,0 +1,21 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{name|kebab_case}}-job
+  namespace: {{namespace}}
+  labels:
+    jobgroup: {{jobgroup}}
+spec:
+  template:
+    metadata:
+      name: {{name|kebab_case}}
+      labels:
+        jobgroup: {{jobgroup}}
+    spec:
+      containers:
+      - name: {{cname}}
+        image: {{image}}
+        env:
+        - name: ENVVARNAME
+          value: ENVVARVALUE
+      restartPolicy: Never

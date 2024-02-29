@@ -35,8 +35,18 @@ deploy-job:
     - kubectl config get-contexts
     - kubectl config use-context {{context}}
     - kubectl get pods
+    # create migrate job use migratedb image
+  # - kubectl -n {{namespace}} create job {{name}}-db-migrate-job-${CI_JOB_ID} --image={{registry}}/{{project}}:{{tag}}-db
     - kubectl -n {{namespace}} set env deployments {{name}}-deployment build_version=$(date "+%Y%m%d%H%M%S")
     # - kubectl -n {{namespace}} set image deployment/{{name}}-deployment {{name}}={{registry}}/{{project}}:${CI_COMMIT_TAG} 
     - echo "Application successfully deployed."
 
 # {{env}} -----------end------
+
+# create job by kubectl
+# https://kubernetes.io/docs/reference/kubectl/generated/kubectl_create/kubectl_create_job/
+#
+# set env
+# $ kubectl create job --from=cronjob/my-cron-job my-manual-run --dry-run -o "json" \
+#   | jq ".spec.template.spec.containers[0].env += [{ \"name\": \"envname1\", value:\"$envvalue1\" }]" \
+#   | kubectl apply -f -
