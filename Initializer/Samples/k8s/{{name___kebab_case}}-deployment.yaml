@@ -2,7 +2,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{name|kebab_case}}-deployment
+  name: {{name|kebab_case}}
   namespace: {{namespace}}
 spec:
   selector:
@@ -27,6 +27,9 @@ spec:
         # env:
         #   - name: CONFIG_NAME
         #     value: "value"
+        envFrom:
+        - configMapRef:
+            name: {{name|kebab_case}}-env
         resources:
           limits:
             cpu: 500m

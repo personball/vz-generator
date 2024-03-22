@@ -38,6 +38,8 @@
     <Compile Remove="Initializer\Samples\**\*" />
     <Compile Remove="output\**\*" />
     <Compile Remove="Generator\Settings\Mermaid\*" />
+    <Compile Remove="Generator\Settings\ClassDiagramParser.cs" />
+    <Compile Remove="Generator\Settings\ErDiagramParser.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Localization\Resources\*.resources" />
