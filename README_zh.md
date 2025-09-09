@@ -115,7 +115,7 @@ DEBUG 模式下使用 `.vzx` 路径，而非 `.vz`。
   - 请检查 `.vscode/launch.json` 中的 `"args"` 配置（每个字符串会被视为一个整体，空格不会被拆分）。
   - 请注释掉 `.vscode/tasks.json` 中的 `build` 任务的 `dependsOn` 配置
 
-MacOS 是本项目的默认开发环境，所有默认配置基本可用。
+MacOS 是本项目的默认开发环境，所有默认配置可用。
 
 ### Develop on windows
 
