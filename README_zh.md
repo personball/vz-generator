@@ -99,7 +99,7 @@ vz g -p 'Create Abp' --var project=MyCompany.MyProject --var entity=User
 ```bash
 ./set-git-hook.sh
 npm i -g commit-and-tag-version # https://github.com/absolute-version/commit-and-tag-version#bumpfiles-packagefiles-and-updaters
-commit-and-tag-version # --frist-release
+commit-and-tag-version --release-as 2.2.0 # --frist-release
 ```
 
 ### Develop on MacOS
