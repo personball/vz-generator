@@ -1,4 +1,4 @@
-namespace {{project}}.{{entity|pluralize}}.Dto
+namespace {{project}}.{{entity|pluralize}}.Dto;
 
 public record {{entity}}Dto(
 
