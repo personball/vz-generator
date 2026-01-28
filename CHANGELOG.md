@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [2.2.0](https://github.com/personball/vz-generator/compare/v2.0.0...v2.2.0) (2026-01-28)
+
+
+### Features
+
+* **init:** add more sample about k8s yamls ([f9c827b](https://github.com/personball/vz-generator/commit/f9c827bc9c5337554375020ae3a8f1165ca11caa))
+* **init:** release new sample resoures ([3f99384](https://github.com/personball/vz-generator/commit/3f9938490d84bfa46108f79a5ccac62d70a20953))
+* **init:** update k8s deployment tpl ([a3b4a9d](https://github.com/personball/vz-generator/commit/a3b4a9d34f554deeeeba2829c3b977027108b1d6))
+* **tool:** update tpl ([b6374c0](https://github.com/personball/vz-generator/commit/b6374c01e2ee029aa0be5557e494e478d8ca5c03))
+
+
+### Bug Fixes
+
+* **g:** VzStringUtils robust if text null ([3aa54f1](https://github.com/personball/vz-generator/commit/3aa54f139d39f1a997cf1caa02693700adbc5412))
+
 ## [2.1.0](https://github.com/personball/vz-generator/compare/v2.0.0...v2.1.0) (2024-03-22)
 
 

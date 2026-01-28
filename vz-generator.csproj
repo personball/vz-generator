@@ -15,11 +15,11 @@
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <Description> A CLI Tool for File Generate with templates. </Description>
-    <Version>2.1.0</Version>
+    <Version>2.2.0</Version>
     <PackageReleaseNotes>
       see https://github.com/personball/vz-generator/blob/master/CHANGELOG.md
     </PackageReleaseNotes>
-    
+
   </PropertyGroup>
 
   <ItemGroup>
