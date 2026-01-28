@@ -17,5 +17,5 @@ public interface I{{entity}}AppService: IApplicationService
     
     Task<{{entity}}Dto> GetAsync(Guid id);
     
-    Task<PagedResultDto<{{entity}}Dto>> GetListAsync(PagedResultRequestDto input);
+    Task<PagedResultDto<{{entity}}Dto>> GetListAsync(Paged{{entity}}ResultRequest input);
 }

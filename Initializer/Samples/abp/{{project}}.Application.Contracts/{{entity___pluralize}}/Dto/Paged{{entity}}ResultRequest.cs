@@ -2,7 +2,7 @@ using Volo.Abp.Application.Dtos;
 
 namespace {{project}}.{{entity|pluralize}}.Dto;
 
-public record Paged{{entity}}ResultRequest : PagedResultRequestDto
+public class Paged{{entity}}ResultRequest : PagedResultRequestDto
 {
     /// <summary>
     /// 关键词

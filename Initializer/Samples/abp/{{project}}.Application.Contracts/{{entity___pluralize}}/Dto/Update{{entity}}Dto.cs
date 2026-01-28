@@ -1,5 +1,22 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace {{project}}.{{entity|pluralize}}.Dto;
 
-public record Update{{entity}}Dto(
-// TODO: add properties
-);
+public class Update{{entity}}Dto
+{
+    /// <summary>
+    /// 名称
+    /// </summary>
+    [Required]
+    [MaxLength(ConsumableConsts.NameMaxLength)]
+    public string Name { get; set; } = null!;
+
+    /// <summary>
+    /// 描述
+    /// </summary>
+    [MaxLength(ConsumableConsts.DescriptionMaxLength)]
+    public string Description { get; set; } = string.Empty;
+
+    // TODO: add properties
+};
+
