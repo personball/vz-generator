@@ -1,5 +1,7 @@
 using vz_generator.Commands.Settings;
 
+using YamlDotNet.Serialization;
+
 namespace vz_generator.Initializer;
 public static class SamplesCollector
 {
@@ -59,11 +61,95 @@ public static class SamplesCollector
             Name = "k8s"
         };
 
-        k8sSample.Settings.Add(CreateK8sDeploySvcOption(k8sSample.Name));
-        k8sSample.Settings.Add(CreateK8sIngressOption(k8sSample.Name));
         k8sSample.Settings.Add(CreateK8sInitWebsiteOption(k8sSample.Name));
+        k8sSample.Settings.Add(CreateK8sInitSpaDockerOption(k8sSample.Name));
+
+        k8sSample.Settings.Add(CreateOptionForSingleYaml(k8sSample.Name, "K8S-DeployWithService", "deployment", (setting) =>
+        {
+            setting.Variables.Add(new TemplateVariable { Name = "image", Type = TemplateVariableType.String });
+            setting.Variables.Add(new TemplateVariable { Name = "port", Type = TemplateVariableType.String, DefaultValue = "80" });
+        }));
+
+        k8sSample.Settings.Add(CreateOptionForSingleYaml(k8sSample.Name, "k8s-ingress", "ing", (setting) =>
+        {
+            setting.Variables.Add(new TemplateVariable { Name = "clusterIssuer", Type = TemplateVariableType.String, DefaultValue = "zerossl" });
+            setting.Variables.Add(new TemplateVariable { Name = "host", Type = TemplateVariableType.String, DefaultValue = "example.com" });
+
+        }));
+
+        k8sSample.Settings.Add(CreateOptionForSingleYaml(k8sSample.Name, "k8s-job", "job", (setting) =>
+        {
+            setting.Variables.Add(new TemplateVariable { Name = "jobgroup", Type = TemplateVariableType.String });
+            setting.Variables.Add(new TemplateVariable { Name = "cname", Type = TemplateVariableType.String, DefaultValue = "containerName" });
+            setting.Variables.Add(new TemplateVariable { Name = "image", Type = TemplateVariableType.String });
+        }));
+
+        k8sSample.Settings.Add(CreateOptionForSingleYaml(k8sSample.Name, "k8s-configMap", "cm", (setting) =>
+        {
+            setting.Variables.Add(new TemplateVariable { Name = "domain", Type = TemplateVariableType.String });
+        }));
 
         return k8sSample;
+    }
+
+    /// <summary>
+    /// 构建选项
+    /// </summary>
+    /// <param name="sampleName"></param>
+    /// <param name="optionName"></param>
+    /// <param name="yamlSuffix"></param>
+    /// <param name="moreAction">默认添加了name变量和namespace变量，可以继续自定义</param>
+    /// <returns></returns>
+    private static GeneratorSetting CreateOptionForSingleYaml(string sampleName, string optionName, string? yamlSuffix = null, Action<GeneratorSetting>? moreAction = null)
+    {
+        var setting = new GeneratorSetting
+        {
+            Option = optionName,
+            TemplatePath = Path.Combine(
+                 ".",
+                 VzConsts.ConfigRoot,
+                 VzConsts.TemplateRoot,
+                 VzConsts.SampleRoot,
+                 sampleName,
+                 "{{name___kebab_case}}-" + yamlSuffix + ".yaml"
+             ),
+            Output = Path.Combine(
+                 ".",
+                 "output",
+                 sampleName,
+                 "{{name___kebab_case}}")
+                 .EnsureEndsWithDirectorySeparatorChar()
+        };
+
+        setting.Variables.Add(new TemplateVariable { Name = "name", Type = TemplateVariableType.String });
+        setting.Variables.Add(new TemplateVariable { Name = "namespace", Type = TemplateVariableType.String });
+
+        moreAction?.Invoke(setting);
+
+        return setting;
+    }
+
+    private static GeneratorSetting CreateK8sInitSpaDockerOption(string sampleName)
+    {
+        var setting = new GeneratorSetting
+        {
+            Option = "K8S-InitSpaDocker",
+            TemplatePath = Path.Combine(
+                ".",
+                VzConsts.ConfigRoot,
+                VzConsts.TemplateRoot,
+                VzConsts.SampleRoot,
+                sampleName,
+                "init-spa-docker"
+            ),
+            Output = Path.Combine(
+                ".")
+                .EnsureEndsWithDirectorySeparatorChar()
+        };
+
+        setting.Variables.Add(new TemplateVariable { Name = "mirror", Type = TemplateVariableType.String });
+
+        return setting;
     }
 
     private static GeneratorSetting CreateK8sInitWebsiteOption(string sampleName)
@@ -90,63 +176,7 @@ public static class SamplesCollector
         return setting;
     }
 
-    private static GeneratorSetting CreateK8sIngressOption(string sampleName)
-    {
-        var setting = new GeneratorSetting
-        {
-            Option = "K8S-Ingress",
-            TemplatePath = Path.Combine(
-                ".",
-                VzConsts.ConfigRoot,
-                VzConsts.TemplateRoot,
-                VzConsts.SampleRoot,
-                sampleName,
-                "{{name___kebab_case}}-ing.yaml"
-            ),
-            Output = Path.Combine(
-                ".",
-                "output",
-                "k8s",
-                "{{name___kebab_case}}")
-                .EnsureEndsWithDirectorySeparatorChar()
-        };
 
-        setting.Variables.Add(new TemplateVariable { Name = "name", Type = TemplateVariableType.String });
-        setting.Variables.Add(new TemplateVariable { Name = "namespace", Type = TemplateVariableType.String });
-        setting.Variables.Add(new TemplateVariable { Name = "clusterIssuer", Type = TemplateVariableType.String, DefaultValue = "zerossl" });
-        setting.Variables.Add(new TemplateVariable { Name = "host", Type = TemplateVariableType.String, DefaultValue = "example.com" });
-
-        return setting;
-    }
-
-    private static GeneratorSetting CreateK8sDeploySvcOption(string sampleName)
-    {
-        var setting = new GeneratorSetting
-        {
-            Option = "K8S-DeployWithService",
-            TemplatePath = Path.Combine(
-                ".",
-                VzConsts.ConfigRoot,
-                VzConsts.TemplateRoot,
-                VzConsts.SampleRoot,
-                sampleName,
-                "{{name___kebab_case}}-deployment.yaml"
-            ),
-            Output = Path.Combine(
-                ".",
-                "output",
-                "k8s",
-                "{{name___kebab_case}}")
-                .EnsureEndsWithDirectorySeparatorChar()
-        };
-
-        setting.Variables.Add(new TemplateVariable { Name = "name", Type = TemplateVariableType.String });
-        setting.Variables.Add(new TemplateVariable { Name = "namespace", Type = TemplateVariableType.String });
-        setting.Variables.Add(new TemplateVariable { Name = "image", Type = TemplateVariableType.String });
-        setting.Variables.Add(new TemplateVariable { Name = "port", Type = TemplateVariableType.String, DefaultValue = "80" });
-
-        return setting;
-    }
 
     public static Example AddVuePinia()
     {

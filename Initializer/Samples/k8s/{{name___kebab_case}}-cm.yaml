@@ -1,0 +1,15 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: {{name|kebab_case}}-env
+  namespace: {{namespace}}
+data:
+  TZ: Asia/Shanghai
+  ASPNETCORE_ENVIRONMENT: Staging
+  ASPNETCORE_FORWARDEDHEADERS_ENABLED: "true"
+  ASPNETCORE_URLS: "http://0.0.0.0:80"
+  ConnectionStrings__Default: ""
+  Redis__Configuration: "redis.default.svc.cluster.local:6379,password=123456,defaultDatabase=1"
+  RemoteServices__Default__BaseUrl: http://api-staging
+  AuthServer__Authority: https://auth.{{domain}}
+  App__CorsOrigins: "http://localhost:4200,http://localhost:5173,https://localhost:44314,https://localhost:44333,https://*.{{domain}}"
